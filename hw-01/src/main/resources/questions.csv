@@ -1,0 +1,5 @@
+1;SINGLE;How many planets are there in the solar system? a - 1. b - 5. c - 8;
+2;SINGLE;Is there life on Mars? a - yes. b - no. c - maybe.;
+3;SINGLE;Is Pluto a planet?; a - no. b - yes. c - maybe.;
+4;MULTY;Select the 3 planets closest to the Sun. a - Mercury. b - Venus. c - Earth. d - Mars;
+5;EXTENDED;Write your favorite planet.;
