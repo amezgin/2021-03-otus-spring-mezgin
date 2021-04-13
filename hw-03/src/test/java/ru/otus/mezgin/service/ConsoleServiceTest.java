@@ -39,7 +39,7 @@ class ConsoleServiceTest {
         IOProvider ioProvider = new IOProviderImpl();
         ioProvider.setPrintStream(printStream);
         InOutService inOutService = new ConsoleService(ioProvider);
-        String expectedGreetings = "Hello!\r\n";
+        String expectedGreetings = "Hello!" + System.lineSeparator();
         inOutService.println("Hello!");
 
         String actualGreetings = byteArrayOutputStream.toString();

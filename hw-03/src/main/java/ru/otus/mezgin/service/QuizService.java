@@ -1,12 +1,15 @@
 package ru.otus.mezgin.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.mezgin.dao.QuestionDao;
 import ru.otus.mezgin.domain.Answer;
 import ru.otus.mezgin.domain.Person;
 import ru.otus.mezgin.domain.Question;
+import ru.otus.mezgin.domain.TestResult;
 import ru.otus.mezgin.errors.ReadInputLineException;
+import ru.otus.mezgin.util.CreateResultInfoUtil;
 import ru.otus.mezgin.util.QuestionUtil;
 
 import java.util.ArrayList;
@@ -19,10 +22,12 @@ public class QuizService {
     private final CheckAnswersService checkAnswersService;
     private final PersonService personService;
     private final InOutService inOutService;
+    private final int countRightAnswers;
 
     @Autowired
-    public QuizService(QuestionDao repository, PersonService personService,
-                       CheckAnswersService checkAnswersService, InOutService inOutService) {
+    public QuizService(@Value("${questions.mincorrectansw}") int countRightAnswers, QuestionDao repository,
+                       PersonService personService, CheckAnswersService checkAnswersService, InOutService inOutService) {
+        this.countRightAnswers = countRightAnswers;
         this.repository = repository;
         this.personService = personService;
         this.checkAnswersService = checkAnswersService;
@@ -48,8 +53,7 @@ public class QuizService {
                         break;
                     }
                 }
-                person.setAnswers(answers);
-                inOutService.println(checkAnswersService.checkAnswers(person, questions).getResult());
+                printResultInfo(answers, questions, person.getName(), person.getLastName());
             }
             printExit();
         } catch (Exception e) {
@@ -64,6 +68,12 @@ public class QuizService {
         personAnswer.setType(question.getType());
         personAnswer.setPersonAnswer(answer.toLowerCase());
         answers.add(personAnswer);
+    }
+
+    private void printResultInfo(List<Answer> answers, List<Question> questions, String name, String lastName) {
+        TestResult testResult = new TestResult(answers);
+        int countPersonRightAnswers = checkAnswersService.checkAnswers(testResult, questions);
+        inOutService.println(CreateResultInfoUtil.createResultInfo(countRightAnswers, countPersonRightAnswers, name, lastName));
     }
 
     private void printWelcome() {

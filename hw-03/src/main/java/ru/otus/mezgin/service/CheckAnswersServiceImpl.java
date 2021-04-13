@@ -1,9 +1,7 @@
 package ru.otus.mezgin.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.mezgin.domain.Answer;
-import ru.otus.mezgin.domain.Person;
 import ru.otus.mezgin.domain.Question;
 import ru.otus.mezgin.domain.TestResult;
 
@@ -13,20 +11,12 @@ import java.util.Optional;
 
 @Service
 public class CheckAnswersServiceImpl implements CheckAnswersService {
-
-    private int countRightAnswers;
-
-    public CheckAnswersServiceImpl(@Value("${questions.mincorrectansw}") int countRightAnswers) {
-        this.countRightAnswers = countRightAnswers;
-    }
-
     @Override
-    public TestResult checkAnswers(Person person, List<Question> questions) {
+    public int checkAnswers(TestResult testResult, List<Question> questions) {
 
-        String result;
         int countRight = 0;
 
-        for (Answer answer : person.getAnswers()) {
+        for (Answer answer : testResult.getAnswers()) {
             Optional<Question> question = questions.stream().filter(q -> q.getNumber() == answer.getNumber()).findAny();
             if (question.isPresent()) {
                 switch (answer.getType()) {
@@ -50,7 +40,7 @@ public class CheckAnswersServiceImpl implements CheckAnswersService {
                 }
             }
         }
-        return new TestResult(countRightAnswers, countRight, person);
+        return countRight;
     }
 
     private boolean checkMultiAnswer(Question question, Answer answer) {
