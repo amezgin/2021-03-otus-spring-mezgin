@@ -6,4 +6,6 @@ spring:
 quiz:
   locale-name: ru-RU
   file-name: questions_ru_RU.csv
-  mincorrectansw: 4
+  minimum-number-correct-answers: 4
+  in: #{ T(java.lang.System).out}
+

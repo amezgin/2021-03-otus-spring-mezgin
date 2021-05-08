@@ -15,7 +15,7 @@ public class QuizConfig {
 
     private String fileName;
 
-    private int mincorrectansw;
+    private int minimumNumberCorrectAnswers;
 
     public void setLocaleName(String localeName) {
         quizLocale = Locale.forLanguageTag(localeName);
@@ -37,11 +37,11 @@ public class QuizConfig {
         this.fileName = fileName;
     }
 
-    public int getMincorrectansw() {
-        return mincorrectansw;
+    public int getMinimumNumberCorrectAnswers() {
+        return minimumNumberCorrectAnswers;
     }
 
-    public void setMincorrectansw(int mincorrectansw) {
-        this.mincorrectansw = mincorrectansw;
+    public void setMinimumNumberCorrectAnswers(int minimumNumberCorrectAnswers) {
+        this.minimumNumberCorrectAnswers = minimumNumberCorrectAnswers;
     }
 }

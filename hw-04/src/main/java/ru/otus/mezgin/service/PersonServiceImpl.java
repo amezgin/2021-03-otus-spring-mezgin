@@ -10,23 +10,17 @@ import ru.otus.mezgin.errors.ReadInputLineException;
 @Service
 public class PersonServiceImpl implements PersonService {
 
-    private final InOutService inOutService;
-
-    private final MessageSource messageSource;
-
-    private final QuizConfig quizConfig;
+    private final InOutLocalizationWrapper inOutLocalizationWrapper;
 
     @Autowired
-    public PersonServiceImpl(InOutService inOutService, MessageSource messageSource, QuizConfig quizConfig) {
-        this.inOutService = inOutService;
-        this.messageSource = messageSource;
-        this.quizConfig = quizConfig;
+    public PersonServiceImpl(InOutLocalizationWrapper inOutLocalizationWrapper) {
+        this.inOutLocalizationWrapper = inOutLocalizationWrapper;
     }
 
     @Override
     public Person createPerson() throws ReadInputLineException {
         askFullName();
-        String fullName = inOutService.readLine().trim();
+        String fullName = inOutLocalizationWrapper.readLine().trim();
 
         while (fullName.contains("  ")) {
             fullName = fullName.replaceAll(" {2}", " ");
@@ -46,7 +40,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     private void askFullName() {
-        inOutService.println(messageSource.getMessage("your.name", null, quizConfig.getQuizLocale()));
-        inOutService.print(messageSource.getMessage("your.answer", null, quizConfig.getQuizLocale()));
+        inOutLocalizationWrapper.println("your.name");
+        inOutLocalizationWrapper.print("your.answer");
     }
 }

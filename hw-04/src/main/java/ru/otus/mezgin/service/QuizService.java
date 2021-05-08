@@ -5,7 +5,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.mezgin.config.QuizConfig;
 import ru.otus.mezgin.domain.Person;
-import ru.otus.mezgin.errors.ReadInputLineException;
 
 @Service
 public class QuizService {
@@ -16,20 +15,14 @@ public class QuizService {
 
     private final TestResultService testResultService;
 
-    private final InOutService inOutService;
-
-    private final MessageSource messageSource;
-
-    private final QuizConfig quizConfig;
+    private final InOutLocalizationWrapper inOutLocalizationWrapper;
 
     @Autowired
-    public QuizService(QuestionService questionService, PersonService personService, TestResultService testResultService, InOutService inOutService, MessageSource messageSource, QuizConfig quizConfig) {
+    public QuizService(QuestionService questionService, PersonService personService, TestResultService testResultService, InOutService inOutService, MessageSource messageSource, QuizConfig quizConfig, InOutLocalizationWrapper inOutLocalizationWrapper) {
         this.questionService = questionService;
         this.personService = personService;
         this.testResultService = testResultService;
-        this.inOutService = inOutService;
-        this.messageSource = messageSource;
-        this.quizConfig = quizConfig;
+        this.inOutLocalizationWrapper = inOutLocalizationWrapper;
     }
 
     public void runQuiz() {
@@ -37,7 +30,7 @@ public class QuizService {
             printWelcome();
             Person person = personService.createPerson();
             printContinue();
-            String answer = inOutService.readLine();
+            String answer = inOutLocalizationWrapper.readLine();
             if ("n".equals(answer) || "н".equals(answer)) {
                 return;
             }
@@ -45,21 +38,21 @@ public class QuizService {
             testResultService.printTestResult(questionService.askQuestion(person));
             printExit();
         } catch (Exception e) {
-            inOutService.println(e.getMessage());
+            inOutLocalizationWrapper.printDefault(e.getMessage());
         }
     }
 
     private void printWelcome() {
-        inOutService.println(messageSource.getMessage("quiz.header", null, quizConfig.getQuizLocale()));
-        inOutService.println(messageSource.getMessage("quiz.welcome", null, quizConfig.getQuizLocale()));
+        inOutLocalizationWrapper.println("quiz.header");
+        inOutLocalizationWrapper.println("quiz.welcome");
     }
 
     private void printContinue() {
-        inOutService.println(messageSource.getMessage("quiz.continue", null, quizConfig.getQuizLocale()));
-        inOutService.print(messageSource.getMessage("your.answer", null, quizConfig.getQuizLocale()));
+        inOutLocalizationWrapper.println("quiz.continue");
+        inOutLocalizationWrapper.print("your.answer");
     }
 
     private void printExit() {
-        inOutService.println(messageSource.getMessage("quiz.bye", null, quizConfig.getQuizLocale()));
+        inOutLocalizationWrapper.println("quiz.bye");
     }
 }

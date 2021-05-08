@@ -6,11 +6,11 @@ import ru.otus.mezgin.errors.ReadInputLineException;
 import java.util.Scanner;
 
 @Service
-public class InOuServiceImpl implements InOutService {
+public class InOutServiceImpl implements InOutService {
 
     private final IOProvider ioProvider;
 
-    public InOuServiceImpl(IOProvider ioProvider) {
+    public InOutServiceImpl(IOProvider ioProvider) {
         this.ioProvider = ioProvider;
     }
 

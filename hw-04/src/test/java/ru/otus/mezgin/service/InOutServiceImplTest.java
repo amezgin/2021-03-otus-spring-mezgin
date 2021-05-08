@@ -12,7 +12,7 @@ import java.io.PrintStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("The InOuServiceImplTest class")
-class InOuServiceImplTest {
+class InOutServiceImplTest {
 
     private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
@@ -25,7 +25,7 @@ class InOuServiceImplTest {
     void printTest() {
         IOProvider ioProvider = new IOProviderImpl();
         ioProvider.setPrintStream(printStream);
-        InOutService inOutService = new InOuServiceImpl(ioProvider);
+        InOutService inOutService = new InOutServiceImpl(ioProvider);
         String expectedGreetings = "Hello!";
         inOutService.print("Hello!");
 
@@ -39,7 +39,7 @@ class InOuServiceImplTest {
     void printlnTest() {
         IOProvider ioProvider = new IOProviderImpl();
         ioProvider.setPrintStream(printStream);
-        InOutService inOutService = new InOuServiceImpl(ioProvider);
+        InOutService inOutService = new InOutServiceImpl(ioProvider);
         String expectedGreetings = "Hello!" + System.lineSeparator();
         inOutService.println("Hello!");
 
@@ -54,7 +54,7 @@ class InOuServiceImplTest {
 
         IOProvider ioProvider = new IOProviderImpl();
         ioProvider.setInputStream(byteArrayInputStream);
-        InOutService inOutService = new InOuServiceImpl(ioProvider);
+        InOutService inOutService = new InOutServiceImpl(ioProvider);
         String expectedName = "Jhon";
 
         String actualName = inOutService.readLine();
