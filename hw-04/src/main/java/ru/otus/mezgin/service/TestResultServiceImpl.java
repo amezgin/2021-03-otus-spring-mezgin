@@ -32,6 +32,7 @@ public class TestResultServiceImpl implements TestResultService {
                     quizConfig.getQuizLocale()));
         }
 
+        inOutService.println("");
         inOutService.println(result);
     }
 }

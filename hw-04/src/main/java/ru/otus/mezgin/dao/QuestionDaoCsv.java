@@ -1,7 +1,8 @@
 package ru.otus.mezgin.dao;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 import ru.otus.mezgin.domain.Question;
 import ru.otus.mezgin.domain.enums.QuestionType;
 import ru.otus.mezgin.errors.QuestionsFindException;
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-@Component
+@Repository
+@Primary
 public class QuestionDaoCsv implements QuestionDao {
 
     private final String questionFileName;

@@ -53,7 +53,7 @@ public class InOutLocalizationWrapperImpl implements InOutLocalizationWrapper {
     }
 
     @Override
-    public String getLocalizedString(String var, String[] args) {
+    public String getLocalizedString(String var, String... args) {
         return localizationService.getLocalizedString(var, args);
     }
 }

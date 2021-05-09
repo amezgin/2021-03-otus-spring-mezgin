@@ -22,8 +22,6 @@ public class QuestionServiceImpl implements QuestionService {
 
     private final QuizConfig quizConfig;
 
-    private final String separator = System.lineSeparator();
-
     public QuestionServiceImpl(QuestionDao questionDao,
                                AnswerService answerService, InOutLocalizationWrapper inOutLocalizationWrapper, QuizConfig quizConfig) {
         this.questionDao = questionDao;
@@ -36,21 +34,14 @@ public class QuestionServiceImpl implements QuestionService {
     public TestResult askQuestion(Person person) throws QuestionsFindException, ReadInputLineException {
         List<Question> questions = questionDao.findAll();
         for (Question question : questions) {
-            inOutLocalizationWrapper.printDefault(formatQuestion(question));
+            inOutLocalizationWrapper.printDefault("");
+            inOutLocalizationWrapper.println("question." + question.getType().getName().toLowerCase());
+            inOutLocalizationWrapper.print("question.q");
+            inOutLocalizationWrapper.printDefault(question.getText());
+            inOutLocalizationWrapper.print("your.answer");
             answerService.fillAnswers(question);
         }
         return new TestResult(quizConfig.getMinimumNumberCorrectAnswers(), answerService.getCountPersonRightAnswers(),
                 person.getName(), person.getLastName());
-    }
-
-    private String formatQuestion(Question question) {
-        StringBuilder builder = new StringBuilder(separator);
-        builder.append(inOutLocalizationWrapper.getLocalizedString("question." + question.getType().getName().toLowerCase()));
-        builder.append(separator);
-        builder.append(inOutLocalizationWrapper.getLocalizedString("question.q"));
-        builder.append(question.getText());
-        builder.append(separator);
-        builder.append(inOutLocalizationWrapper.getLocalizedString("your.answer"));
-        return builder.toString();
     }
 }
