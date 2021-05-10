@@ -1,11 +1,13 @@
 package ru.otus.mezgin.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import ru.otus.mezgin.domain.Question;
 import ru.otus.mezgin.domain.enums.QuestionType;
 import ru.otus.mezgin.errors.QuestionsFindException;
+import ru.otus.mezgin.service.QuestionFileNameProvider;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,20 +16,19 @@ import java.util.List;
 import java.util.Scanner;
 
 @Repository
-@Primary
 public class QuestionDaoCsv implements QuestionDao {
 
-    private final String questionFileName;
+    @Autowired
+    private QuestionFileNameProvider questionFileNameProvider;
 
     private final List<Question> questions = new ArrayList<>();
 
-    public QuestionDaoCsv(@Value("${quiz.file-name}") String questionFileName) {
-        this.questionFileName = "/" + questionFileName;
+    public QuestionDaoCsv() {
     }
 
     @Override
     public List<Question> findAll() throws QuestionsFindException {
-        readCsv(this.questionFileName);
+        readCsv("/" + this.questionFileNameProvider.getQuestionFileName());
         return questions;
     }
 

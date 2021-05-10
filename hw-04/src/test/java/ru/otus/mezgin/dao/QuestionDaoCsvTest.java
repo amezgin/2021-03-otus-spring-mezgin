@@ -5,27 +5,32 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.mezgin.domain.Question;
 import ru.otus.mezgin.errors.QuestionsFindException;
-import ru.otus.mezgin.config.QuestionDaoCsvFileNameTestConfig;
+import ru.otus.mezgin.service.QuestionFileNameProvider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.BDDMockito.given;
 
 @DisplayName("The Person class")
 @SpringBootTest
-@Import(QuestionDaoCsvFileNameTestConfig.class)
 class QuestionDaoCsvTest {
 
+    @MockBean
+    private QuestionFileNameProvider questionFileNameProvider;
+
     @Autowired
-    private QuestionDaoCsvFileNameTestConfig QuestionDaoCsvFileNameTestConfig;
+    private QuestionDao questionDao;
 
     @DisplayName("is finding all questions.")
     @Test
     void findAllQuestions() throws QuestionsFindException {
 
-        for (Question question : QuestionDaoCsvFileNameTestConfig.questionDaoCsvCorrectFile().findAll()) {
+        given(this.questionFileNameProvider.getQuestionFileName()).willReturn("questions.csv");
+
+        for (Question question : questionDao.findAll()) {
             assertAll(
                     () -> assertThat(question.getCorrectAnswers()).isNotNull(),
                     () -> assertThat(question.getText()).isNotNull(),
@@ -38,7 +43,9 @@ class QuestionDaoCsvTest {
     @Test
     void checkingExceptionTypeIncorrectFile() {
 
-        Exception exception = Assertions.assertThrows(QuestionsFindException.class, QuestionDaoCsvFileNameTestConfig.questionDaoCsvMissingFile()::findAll);
+        given(this.questionFileNameProvider.getQuestionFileName()).willReturn("incorrectfile.csv");
+
+        Exception exception = Assertions.assertThrows(QuestionsFindException.class, questionDao::findAll);
 
         assertThat(exception).isInstanceOf(QuestionsFindException.class);
     }
@@ -47,7 +54,9 @@ class QuestionDaoCsvTest {
     @Test
     void checkingExceptionTypeMissingFile() {
 
-        Exception exception = Assertions.assertThrows(QuestionsFindException.class, QuestionDaoCsvFileNameTestConfig.questionDaoCsvIncorrectFile()::findAll);
+        given(this.questionFileNameProvider.getQuestionFileName()).willReturn("question.csv");
+
+        Exception exception = Assertions.assertThrows(QuestionsFindException.class, questionDao::findAll);
 
         assertThat(exception).isInstanceOf(QuestionsFindException.class);
     }
