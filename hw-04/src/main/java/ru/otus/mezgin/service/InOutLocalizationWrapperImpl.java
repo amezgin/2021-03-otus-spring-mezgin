@@ -23,7 +23,7 @@ public class InOutLocalizationWrapperImpl implements InOutLocalizationWrapper {
     }
 
     @Override
-    public void print(String var, String[] args) {
+    public void print(String var, String... args) {
         inOutService.print(getLocalizedString(var, args));
     }
 
@@ -33,7 +33,7 @@ public class InOutLocalizationWrapperImpl implements InOutLocalizationWrapper {
     }
 
     @Override
-    public void println(String var, String[] args) {
+    public void println(String var, String... args) {
         inOutService.println(getLocalizedString(var, args));
     }
 
@@ -45,11 +45,6 @@ public class InOutLocalizationWrapperImpl implements InOutLocalizationWrapper {
     @Override
     public String readLine() throws ReadInputLineException {
         return inOutService.readLine();
-    }
-
-    @Override
-    public String getLocalizedString(String var) {
-        return getLocalizedString(var, null);
     }
 
     @Override

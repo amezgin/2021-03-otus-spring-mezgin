@@ -1,8 +1,6 @@
 package ru.otus.mezgin.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import ru.otus.mezgin.domain.Question;
 import ru.otus.mezgin.domain.enums.QuestionType;
@@ -18,12 +16,14 @@ import java.util.Scanner;
 @Repository
 public class QuestionDaoCsv implements QuestionDao {
 
-    @Autowired
-    private QuestionFileNameProvider questionFileNameProvider;
+
+    private final QuestionFileNameProvider questionFileNameProvider;
 
     private final List<Question> questions = new ArrayList<>();
 
-    public QuestionDaoCsv() {
+    @Autowired
+    public QuestionDaoCsv(QuestionFileNameProvider questionFileNameProvider) {
+        this.questionFileNameProvider = questionFileNameProvider;
     }
 
     @Override

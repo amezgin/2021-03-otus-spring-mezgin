@@ -1,11 +1,11 @@
 package ru.otus.mezgin.service;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.io.PrintStream;
 
-@Service
+@Component
 public class IOProviderImpl implements IOProvider {
 
     private PrintStream printStream = System.out;
