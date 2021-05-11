@@ -1,0 +1,5 @@
+1;SINGLE;Сколько планет находится в солнечной системе? a - 1. b - 5. c - 8;c;
+2;SINGLE;Есть ли жизнь на Марсе? a - yes. b - no. c - maybe.;b;
+3;SINGLE;Плутон - это планета? a - no. b - yes. c - maybe.;a;
+4;MULTI;Выберите 3 ближайшие в Солнцу планеты. a - Mercury. b - Venus. c - Earth. d - Mars;a, b, c;
+5;EXTENDED;Напишите название Вашей любимой планеты;Mercury, Venus, Earth, Mars, Saturn, Uranus, Neptune, Jupiter;
