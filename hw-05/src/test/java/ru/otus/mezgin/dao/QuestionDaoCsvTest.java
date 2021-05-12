@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import ru.otus.mezgin.domain.Question;
 import ru.otus.mezgin.errors.QuestionsFindException;
 import ru.otus.mezgin.service.QuestionFileNameProvider;
@@ -14,8 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 
-@DisplayName("The Person class")
+@DisplayName("The QuestionDaoCsv class")
 @SpringBootTest
+@ActiveProfiles("test")
 class QuestionDaoCsvTest {
 
     @MockBean

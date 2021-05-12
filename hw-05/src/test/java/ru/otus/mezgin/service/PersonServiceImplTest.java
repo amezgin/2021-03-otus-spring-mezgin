@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import ru.otus.mezgin.domain.Person;
 import ru.otus.mezgin.errors.ReadInputLineException;
 import ru.otus.mezgin.testdata.PersonData;
@@ -14,6 +15,7 @@ import static org.mockito.BDDMockito.given;
 
 @DisplayName("The PersonServiceImplTest class")
 @SpringBootTest
+@ActiveProfiles("test")
 public class PersonServiceImplTest {
 
     @MockBean
