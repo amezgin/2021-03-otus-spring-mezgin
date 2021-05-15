@@ -1,0 +1,13 @@
+spring:
+  messages:
+    basename: i18n.messages
+    fallback-to-system-locale: false
+  shell:
+    interactive:
+      enabled: false
+
+quiz:
+  locale-name: ru-RU
+  file-name: questions_ru_RU.csv
+  minimum-number-correct-answers: 4
+
