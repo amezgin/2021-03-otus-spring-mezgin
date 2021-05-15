@@ -9,7 +9,7 @@ import ru.otus.mezgin.service.QuizService;
 public class Main {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 
         QuizService service = context.getBean(QuizService.class);
 
