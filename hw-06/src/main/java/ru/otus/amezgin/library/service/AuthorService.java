@@ -15,6 +15,4 @@ public interface AuthorService {
     List<Author> getAll();
 
     Author save(Author author);
-
-    void deleteById(long id) throws AuthorRemoveException;
 }

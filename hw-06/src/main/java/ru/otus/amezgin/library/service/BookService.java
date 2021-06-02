@@ -16,5 +16,5 @@ public interface BookService {
 
     void update(Book book);
 
-    void deleteById(long id) throws BookRemoveException;
+    void deleteById(long id);
 }

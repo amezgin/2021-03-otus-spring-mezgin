@@ -1,7 +1,6 @@
 package ru.otus.amezgin.library.service;
 
 import org.springframework.stereotype.Service;
-import ru.otus.amezgin.library.exception.AuthorRemoveException;
 import ru.otus.amezgin.library.repository.AuthorJdbc;
 import ru.otus.amezgin.library.domain.Author;
 
@@ -35,12 +34,5 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Author save(Author author) {
         return authorJdbc.save(author);
-    }
-
-    @Override
-    public void deleteById(long id) throws AuthorRemoveException {
-        if (authorJdbc.getById(id).isEmpty()) {
-            throw new AuthorRemoveException(String.format("The author with ID %d was not found in the DB.", id));
-        }
     }
 }

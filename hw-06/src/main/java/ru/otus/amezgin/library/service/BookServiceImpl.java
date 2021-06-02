@@ -1,7 +1,6 @@
 package ru.otus.amezgin.library.service;
 
 import org.springframework.stereotype.Service;
-import ru.otus.amezgin.library.exception.BookRemoveException;
 import ru.otus.amezgin.library.repository.BookJdbc;
 import ru.otus.amezgin.library.domain.Book;
 
@@ -38,11 +37,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteById(long id) throws BookRemoveException {
-        if (bookJdbc.getById(id).isEmpty()) {
-            throw new BookRemoveException(String.format("The book with ID %d was not found in the DB.", id));
-        } else {
-            bookJdbc.deleteById(id);
-        }
+    public void deleteById(long id) {
+        bookJdbc.deleteById(id);
     }
 }

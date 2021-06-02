@@ -4,12 +4,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Author;
+import ru.otus.amezgin.library.repository.AuthorJdbc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DisplayName("The AuthorServiceImpl class")
@@ -23,6 +27,9 @@ class AuthorServiceImplTest {
     public static final String PERUMOV = "Перумов, Н.";
     public static final String NEW_AUTHOR = "Лукьяненко, С.";
 
+    @MockBean
+    private AuthorJdbc authorJdbc;
+
     @Autowired
     private AuthorService authorService;
 
@@ -31,6 +38,7 @@ class AuthorServiceImplTest {
     void checkingGetById() {
         Author expectedAuthor = new Author(AUTHOR_ID_1, GARRISSON);
 
+        doReturn(Optional.of(expectedAuthor)).when(authorJdbc).getById(AUTHOR_ID_1);
         Author actualAuthor = authorService.getById(AUTHOR_ID_1).get();
 
         assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
@@ -43,6 +51,7 @@ class AuthorServiceImplTest {
         Author author1 = new Author(AUTHOR_ID_1, GARRISSON);
         Author author2 = new Author(AUTHOR_ID_2, PERUMOV);
         List<Author> list = List.of(author1, author2);
+        doReturn(list).when(authorJdbc).getAll();
 
         List<Author> actList = authorService.getAll();
 
@@ -52,7 +61,8 @@ class AuthorServiceImplTest {
     @DisplayName("is checking save method.")
     @Test
     void checkingSave() {
-        Author expectedAuthor = new Author(NEW_AUTHOR);
+        Author expectedAuthor = new Author(AUTHOR_ID_2, NEW_AUTHOR);
+        doReturn(expectedAuthor).when(authorJdbc).save(expectedAuthor);
         Author actualAuthor = authorService.save(expectedAuthor);
         assertThat(actualAuthor.getId()).isGreaterThan(ZERO_ID);
         assertThat(actualAuthor.getFullName()).isEqualTo(expectedAuthor.getFullName());
