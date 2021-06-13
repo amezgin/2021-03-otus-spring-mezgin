@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Book;
@@ -15,9 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import({CommentJPAImpl.class, BookJPAImpl.class})
+@Import({CommentJPARepositoryImpl.class})
 @DisplayName("The CommentJPAImpl class")
-class CommentJPAImplTest {
+class CommentJPARepositoryImplTest {
 
     public static final int EXPECTED_LIST_COMMENT_SIZE = 3;
     public static final int ZERO = 0;
@@ -27,51 +28,51 @@ class CommentJPAImplTest {
     public static final String COMMENT_1 = "Чушь!";
 
     @Autowired
-    private CommentJPA commentJPA;
+    private CommentJPARepository commentJPARepository;
 
     @Autowired
-    private BookJPA bookJPA;
+    private TestEntityManager em;
 
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
-        Book book = bookJPA.getById(BOOK_ID).get();
+        Book book = em.find(Book.class, BOOK_ID);
         Comment comment = new Comment();
         comment.setBook(book);
         comment.setUserName(ADMIN);
         comment.setText(COMMENT_1);
-        commentJPA.save(comment);
-        assertThat(commentJPA.getById(comment.getId())).isNotEmpty();
+        em.persist(comment);
+        assertThat(commentJPARepository.getById(comment.getId())).isNotEmpty();
     }
 
     @DisplayName("is checking getAll method.")
     @Test
     @DirtiesContext(methodMode = BEFORE_METHOD)
     void checkingGetAll() {
-        List<Comment> genres = commentJPA.getAll();
+        List<Comment> genres = commentJPARepository.getAll();
         assertThat(genres.size()).isEqualTo(EXPECTED_LIST_COMMENT_SIZE);
     }
 
     @DisplayName("is checking save method.")
     @Test
     void checkingSave() {
-        Book book = bookJPA.getById(BOOK_ID).get();
+        Book book = em.find(Book.class, BOOK_ID);
         Comment comment = new Comment();
         comment.setBook(book);
         comment.setUserName(ADMIN);
         comment.setText(COMMENT_1);
-        commentJPA.save(comment);
+        commentJPARepository.save(comment);
         assertThat(comment.getId()).isGreaterThan(ZERO);
     }
 
     @DisplayName("is checking deleteById method.")
     @Test
     void checkingDeleteById() {
-        Comment comment = commentJPA.getById(COMMENT_ID).get();
+        Comment comment = em.find(Comment.class, COMMENT_ID);
         assertThat(comment.getId()).isEqualTo(COMMENT_ID);
 
-        commentJPA.deleteById(comment.getId());
+        commentJPARepository.deleteById(comment.getId());
 
-        assertThat(commentJPA.getAll()).doesNotContain(comment);
+        assertThat(commentJPARepository.getAll()).doesNotContain(comment);
     }
 }

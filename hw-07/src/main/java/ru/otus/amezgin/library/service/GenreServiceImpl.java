@@ -2,10 +2,10 @@ package ru.otus.amezgin.library.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.amezgin.library.repository.GenreJPA;
+import org.springframework.transaction.annotation.Transactional;
+import ru.otus.amezgin.library.repository.GenreJPARepository;
 import ru.otus.amezgin.library.domain.Genre;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,32 +13,35 @@ import java.util.Optional;
 @AllArgsConstructor
 public class GenreServiceImpl implements GenreService {
 
-    private final GenreJPA genreJPA;
+    private final GenreJPARepository genreJPARepository;
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Genre> getById(Long id) {
-        return genreJPA.getById(id);
+        return genreJPARepository.getById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Genre> getByName(String name) {
-        return genreJPA.getByName(name);
+        return genreJPARepository.getByName(name);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Genre> getAll() {
-        return genreJPA.getAll();
+        return genreJPARepository.getAll();
     }
 
     @Transactional
     @Override
     public Genre save(Genre genre) {
-        return genreJPA.save(genre);
+        return genreJPARepository.save(genre);
     }
 
     @Transactional
     @Override
     public void deleteById(Long id) {
-        genreJPA.deleteById(id);
+        genreJPARepository.deleteById(id);
     }
 }

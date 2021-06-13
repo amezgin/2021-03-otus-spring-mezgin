@@ -3,7 +3,6 @@ package ru.otus.amezgin.library.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.amezgin.library.domain.Book;
-import ru.otus.amezgin.library.domain.Genre;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -11,7 +10,7 @@ import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
-public class BookJPAImpl implements BookJPA {
+public class BookJPARepositoryImpl implements BookJPARepository {
 
     @PersistenceContext
     private final EntityManager em;

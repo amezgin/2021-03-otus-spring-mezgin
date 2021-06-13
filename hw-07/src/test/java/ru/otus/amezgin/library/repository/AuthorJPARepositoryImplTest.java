@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Author;
@@ -14,9 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import(AuthorJPAImpl.class)
+@Import(AuthorJPARepositoryImpl.class)
 @DisplayName("The AuthorJPAImpl class")
-class AuthorJPAImplTest {
+class AuthorJPARepositoryImplTest {
 
     public static final String NEW_AUTHOR = "Лукьяненко, С.";
     public static final Long AUTHOR_ID = 1L;
@@ -24,15 +25,18 @@ class AuthorJPAImplTest {
     public static final long ZERO_ID = 0;
 
     @Autowired
-    private AuthorJPA authorJPA;
+    private AuthorJPARepository authorJPARepository;
+
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
         Author author = new Author();
         author.setFullName(NEW_AUTHOR);
-        authorJPA.save(author);
-        assertThat(authorJPA.getById(author.getId())).isNotEmpty();
+        em.persist(author);
+        assertThat(authorJPARepository.getById(author.getId())).isNotEmpty();
     }
 
     @DisplayName("is checking getAll method.")
@@ -41,8 +45,8 @@ class AuthorJPAImplTest {
     void checkingGetAll() {
         Author author = new Author();
         author.setFullName(NEW_AUTHOR);
-        authorJPA.save(author);
-        List<Author> authors = authorJPA.getAll();
+        em.persist(author);
+        List<Author> authors = authorJPARepository.getAll();
         assertThat(authors.size()).isEqualTo(EXPECTED_LIST_AUTHORS_SIZE);
         assertThat(authors).contains(author);
     }
@@ -52,18 +56,18 @@ class AuthorJPAImplTest {
     void checkingSave() {
         Author author = new Author();
         author.setFullName(NEW_AUTHOR);
-        authorJPA.save(author);
+        authorJPARepository.save(author);
         assertThat(author.getId()).isGreaterThan(ZERO_ID);
     }
 
     @DisplayName("is checking deleteById method.")
     @Test
     void checkingDeleteById() {
-        Author author = authorJPA.getById(AUTHOR_ID).get();
+        Author author = em.find(Author.class, AUTHOR_ID);
         assertThat(author.getId()).isEqualTo(AUTHOR_ID);
 
-        authorJPA.deleteById(AUTHOR_ID);
+        authorJPARepository.deleteById(AUTHOR_ID);
 
-        assertThat(authorJPA.getAll()).doesNotContain(author);
+        assertThat(authorJPARepository.getAll()).doesNotContain(author);
     }
 }

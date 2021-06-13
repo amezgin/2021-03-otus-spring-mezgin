@@ -5,7 +5,7 @@ import ru.otus.amezgin.library.domain.Genre;
 import java.util.List;
 import java.util.Optional;
 
-public interface GenreJPA {
+public interface GenreJPARepository {
 
     Optional<Genre> getById(Long id);
 

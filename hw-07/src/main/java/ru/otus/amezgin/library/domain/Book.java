@@ -29,7 +29,7 @@ public class Book {
     private Author author;
 
     @EqualsAndHashCode.Exclude
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(targetEntity = Genre.class, fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_genre",

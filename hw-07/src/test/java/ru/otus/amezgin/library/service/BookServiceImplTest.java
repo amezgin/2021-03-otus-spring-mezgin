@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
-import ru.otus.amezgin.library.domain.Author;
 import ru.otus.amezgin.library.domain.Book;
 import ru.otus.amezgin.library.domain.Genre;
-import ru.otus.amezgin.library.repository.BookJPA;
-import ru.otus.amezgin.library.repository.GenreJPA;
+import ru.otus.amezgin.library.repository.BookJPARepository;
+import ru.otus.amezgin.library.repository.GenreJPARepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +34,10 @@ class BookServiceImplTest {
     public static final String AUTHOR_1 = "Гаррисон, Г.";
 
     @MockBean
-    private GenreJPA genreJPA;
+    private GenreJPARepository genreJPARepository;
 
     @MockBean
-    private BookJPA bookJPA;
+    private BookJPARepository bookJPARepository;
 
     @Autowired
     private BookService bookService;
@@ -53,11 +52,11 @@ class BookServiceImplTest {
         Genre expectedGenre = new Genre();
         expectedGenre.setId(GENRE_ID_1);
         expectedGenre.setGenreName(FANTASTIC);
-        doReturn(Optional.of(expectedGenre)).when(genreJPA).getById(GENRE_ID_1);
+        doReturn(Optional.of(expectedGenre)).when(genreJPARepository).getById(GENRE_ID_1);
         Book expectedBook = new Book();
         expectedBook.setId(ID_ONE);
         expectedBook.setTitle(BOOK_TITLE_1);
-        doReturn(Optional.of(expectedBook)).when(bookJPA).getById(ID_ONE);
+        doReturn(Optional.of(expectedBook)).when(bookJPARepository).getById(ID_ONE);
         Book actualBook = bookService.getById(ID_ONE).get();
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
@@ -69,12 +68,12 @@ class BookServiceImplTest {
         Genre expectedGenre = new Genre();
         expectedGenre.setId(GENRE_ID_1);
         expectedGenre.setGenreName(FANTASTIC);
-        doReturn(Optional.of(expectedGenre)).when(genreJPA).getById(GENRE_ID_1);
+        doReturn(Optional.of(expectedGenre)).when(genreJPARepository).getById(GENRE_ID_1);
         Book expectedBook = new Book();
         expectedBook.setId(ID_ONE);
         expectedBook.setTitle(BOOK_TITLE_1);
         List<Book> expectedBookList = List.of(expectedBook);
-        doReturn(expectedBookList).when(bookJPA).getAll();
+        doReturn(expectedBookList).when(bookJPARepository).getAll();
         List<Book> books = bookService.getAll();
         assertThat(books.size()).isEqualTo(EXPECTED_LIST_BOOK_SIZE);
     }
@@ -86,11 +85,11 @@ class BookServiceImplTest {
         Genre expectedGenre = new Genre();
         expectedGenre.setId(GENRE_ID_1);
         expectedGenre.setGenreName(FANTASTIC);
-        doReturn(Optional.of(expectedGenre)).when(genreJPA).getById(GENRE_ID_1);
+        doReturn(Optional.of(expectedGenre)).when(genreJPARepository).getById(GENRE_ID_1);
         Book book = new Book();
         book.setId(ID_ONE);
         book.setTitle(BOOK_TITLE_2);
-        doReturn(book).when(bookJPA).save(book);
+        doReturn(book).when(bookJPARepository).save(book);
         Book expectedBook = bookService.save(book);
         assertThat(expectedBook.getId()).isGreaterThan(ZERO);
         assertThat(expectedBook.getTitle()).isEqualTo(BOOK_TITLE_2);
@@ -103,16 +102,16 @@ class BookServiceImplTest {
         Genre expectedGenre = new Genre();
         expectedGenre.setId(GENRE_ID_1);
         expectedGenre.setGenreName(FANTASTIC);
-        doReturn(Optional.of(expectedGenre)).when(genreJPA).getById(GENRE_ID_1);
+        doReturn(Optional.of(expectedGenre)).when(genreJPARepository).getById(GENRE_ID_1);
         Book book = new Book();
         book.setId(ID_ONE);
         book.setTitle(BOOK_TITLE_1);
-        doReturn(Optional.of(book)).when(bookJPA).getById(ID_ONE);
+        doReturn(Optional.of(book)).when(bookJPARepository).getById(ID_ONE);
         Book expectedBook = bookService.getById(ID_ONE).get();
         expectedBook.setTitle(BOOK_TITLE_2);
-        doReturn(expectedBook).when(bookJPA).update(expectedBook);
+        doReturn(expectedBook).when(bookJPARepository).update(expectedBook);
         bookService.update(expectedBook);
-        doReturn(Optional.of(expectedBook)).when(bookJPA).getById(ID_ONE);
+        doReturn(Optional.of(expectedBook)).when(bookJPARepository).getById(ID_ONE);
         Book actualBook = bookService.getById(ID_ONE).get();
         assertThat(expectedBook.getTitle()).isEqualTo(actualBook.getTitle());
     }
@@ -124,7 +123,7 @@ class BookServiceImplTest {
         Genre expectedGenre = new Genre();
         expectedGenre.setId(GENRE_ID_1);
         expectedGenre.setGenreName(FANTASTIC);
-        doReturn(Optional.of(expectedGenre)).when(genreJPA).getById(GENRE_ID_1);
+        doReturn(Optional.of(expectedGenre)).when(genreJPARepository).getById(GENRE_ID_1);
         Book book1 = new Book();
         book1.setId(ID_ONE);
         book1.setTitle(BOOK_TITLE_1);
@@ -132,8 +131,8 @@ class BookServiceImplTest {
         book2.setId(ID_TWO);
         book2.setTitle(BOOK_TITLE_2);
         List<Book> books = new ArrayList<>(List.of(book1, book2));
-        doAnswer(i -> books.remove(0)).when(bookJPA).deleteById(ID_ONE);
-        doReturn(books).when(bookJPA).getAll();
+        doAnswer(i -> books.remove(0)).when(bookJPARepository).deleteById(ID_ONE);
+        doReturn(books).when(bookJPARepository).getAll();
         bookService.deleteById(ID_ONE);
 
         assertThat(bookService.getAll()).doesNotContain(book1);

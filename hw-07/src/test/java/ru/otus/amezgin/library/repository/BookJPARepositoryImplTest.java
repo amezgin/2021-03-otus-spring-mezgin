@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Author;
@@ -16,9 +17,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import({BookJPAImpl.class, AuthorJPAImpl.class, GenreJPAImpl.class})
+@Import({BookJPARepositoryImpl.class, AuthorJPARepositoryImpl.class, GenreJPARepositoryImpl.class})
 @DisplayName("The BookJPAImpl class")
-class BookJPAImplTest {
+class BookJPARepositoryImplTest {
 
     public static final String AUTHOR = "Перумов, Н.";
     public static final String BOOK_TITLE = "Сумеречный дозор";
@@ -28,41 +29,44 @@ class BookJPAImplTest {
     public static final int ZERO = 0;
 
     @Autowired
-    private AuthorJPA authorJPA;
+    private AuthorJPARepository authorJPARepository;
 
     @Autowired
-    private GenreJPA genreJPA;
+    private GenreJPARepository genreJPARepository;
 
     @Autowired
-    private BookJPA bookJPA;
+    private BookJPARepository bookJPARepository;
+
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
-        List<Genre> genre = genreJPA.getAll();
-        Author author = authorJPA.getByName(AUTHOR).get();
+        List<Genre> genre = genreJPARepository.getAll();
+        Author author = authorJPARepository.getByName(AUTHOR).get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
         book.setGenres(genre);
 
-        bookJPA.save(book);
-        assertThat(bookJPA.getById(author.getId())).isNotEmpty();
+        em.persist(book);
+        assertThat(bookJPARepository.getById(author.getId())).isNotEmpty();
     }
 
     @DisplayName("is checking getAll method.")
     @Test
     @DirtiesContext(methodMode = BEFORE_METHOD)
     void checkingGetAll() {
-        List<Genre> genre = genreJPA.getAll();
-        Author author = authorJPA.getByName(AUTHOR).get();
+        List<Genre> genre = genreJPARepository.getAll();
+        Author author = authorJPARepository.getByName(AUTHOR).get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
         book.setGenres(genre);
 
-        bookJPA.save(book);
-        List<Book> books = bookJPA.getAll();
+        em.persist(book);
+        List<Book> books = bookJPARepository.getAll();
         assertThat(books.size()).isEqualTo(EXPECTED_LIST_BOOK_SIZE);
         assertThat(books).contains(book);
     }
@@ -70,14 +74,14 @@ class BookJPAImplTest {
     @DisplayName("is checking save method.")
     @Test
     void checkingSave() {
-        List<Genre> genre = genreJPA.getAll();
-        Author author = authorJPA.getByName(AUTHOR).get();
+        List<Genre> genre = genreJPARepository.getAll();
+        Author author = authorJPARepository.getByName(AUTHOR).get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
         book.setGenres(genre);
 
-        bookJPA.save(book);
+        bookJPARepository.save(book);
         assertThat(book.getId()).isGreaterThan(ZERO);
         assertThat(book.getTitle()).isEqualTo(BOOK_TITLE);
     }
@@ -85,28 +89,28 @@ class BookJPAImplTest {
     @DisplayName("is checking update method.")
     @Test
     void checkingUpdate() {
-        List<Genre> genre = genreJPA.getAll();
-        Author author = authorJPA.getByName(AUTHOR).get();
+        List<Genre> genre = genreJPARepository.getAll();
+        Author author = authorJPARepository.getByName(AUTHOR).get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
         book.setGenres(genre);
 
-        bookJPA.save(book);
+        em.persist(book);
         book.setTitle(UPDATE_BOOK_TITLE);
-        bookJPA.update(book);
-        Book actualBook = bookJPA.getById(book.getId()).get();
+        bookJPARepository.update(book);
+        Book actualBook = em.find(Book.class, book.getId());
         assertThat(book.getTitle()).isEqualTo(actualBook.getTitle());
     }
 
     @DisplayName("is checking deleteById method.")
     @Test
     void checkingDeleteById() {
-        Book book = bookJPA.getById(BOOK_ID).get();
+        Book book = em.find(Book.class, BOOK_ID);
         assertThat(book.getId()).isEqualTo(BOOK_ID);
 
-        bookJPA.deleteById(BOOK_ID);
+        bookJPARepository.deleteById(BOOK_ID);
 
-        assertThat(bookJPA.getAll()).doesNotContain(book);
+        assertThat(bookJPARepository.getAll()).doesNotContain(book);
     }
 }

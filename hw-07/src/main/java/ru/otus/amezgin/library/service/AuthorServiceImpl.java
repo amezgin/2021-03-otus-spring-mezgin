@@ -2,10 +2,10 @@ package ru.otus.amezgin.library.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.amezgin.library.repository.AuthorJPA;
+import org.springframework.transaction.annotation.Transactional;
+import ru.otus.amezgin.library.repository.AuthorJPARepository;
 import ru.otus.amezgin.library.domain.Author;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,32 +13,35 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
-    private final AuthorJPA authorJPA;
+    private final AuthorJPARepository authorJPARepository;
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Author> getById(Long id) {
-        return authorJPA.getById(id);
+        return authorJPARepository.getById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Author> getByName(String name) {
-        return authorJPA.getByName(name);
+        return authorJPARepository.getByName(name);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Author> getAll() {
-        return authorJPA.getAll();
+        return authorJPARepository.getAll();
     }
 
     @Transactional
     @Override
     public Author save(Author author) {
-        return authorJPA.save(author);
+        return authorJPARepository.save(author);
     }
 
     @Transactional
     @Override
     public void deleteById(Long id) {
-        authorJPA.deleteById(id);
+        authorJPARepository.deleteById(id);
     }
 }

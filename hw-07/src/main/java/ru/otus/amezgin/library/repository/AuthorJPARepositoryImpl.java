@@ -3,7 +3,6 @@ package ru.otus.amezgin.library.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.amezgin.library.domain.Author;
-import ru.otus.amezgin.library.domain.Genre;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,36 +12,36 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class GenreJPAImpl implements GenreJPA {
+public class AuthorJPARepositoryImpl implements AuthorJPARepository {
 
     @PersistenceContext
     private final EntityManager em;
 
     @Override
-    public Optional<Genre> getById(Long id) {
-        return Optional.ofNullable(em.find(Genre.class, id));
+    public Optional<Author> getById(Long id) {
+        return Optional.ofNullable(em.find(Author.class, id));
     }
 
     @Override
-    public Optional<Genre> getByName(String name) {
-        TypedQuery<Genre> query = em.createQuery(
-                "select g from Genre g where g.genreName = :name", Genre.class);
+    public Optional<Author> getByName(String name) {
+        TypedQuery<Author> query = em.createQuery(
+                "select a from Author a where a.fullName = :name", Author.class);
         return query.setParameter("name", name).getResultList().stream().findFirst();
     }
 
     @Override
-    public List<Genre> getAll() {
-        return em.createQuery("select g from Genre g", Genre.class).getResultList();
+    public List<Author> getAll() {
+        return em.createQuery("select a from Author a", Author.class).getResultList();
     }
 
     @Override
-    public Genre save(Genre genre) {
-        em.persist(genre);
-        return genre;
+    public Author save(Author author) {
+        em.persist(author);
+        return author;
     }
 
     @Override
     public void deleteById(Long id) {
-        Optional.ofNullable(em.find(Genre.class, id)).ifPresent(em::remove);
+        Optional.ofNullable(em.find(Author.class, id)).ifPresent(em::remove);
     }
 }

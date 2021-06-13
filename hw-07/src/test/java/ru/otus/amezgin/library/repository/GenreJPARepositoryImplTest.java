@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Genre;
@@ -14,25 +15,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import(GenreJPAImpl.class)
+@Import(GenreJPARepositoryImpl.class)
 @DisplayName("The GenreJPAImpl class")
-class GenreJPAImplTest {
+class GenreJPARepositoryImplTest {
 
     public static final String NEW_GENRE = "Приключения";
     public static final int EXPECTED_LIST_GENRES_SIZE = 3;
     public static final long ZERO = 0;
-    public static final long GENRE_ID = 1;
 
     @Autowired
-    private GenreJPA genreJPA;
+    private GenreJPARepository genreJPARepository;
+
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
-        genreJPA.save(genre);
-        assertThat(genreJPA.getById(genre.getId())).isNotEmpty();
+        em.persist(genre);
+        assertThat(genreJPARepository.getById(genre.getId())).isNotEmpty();
     }
 
     @DisplayName("is checking getAll method.")
@@ -41,8 +44,8 @@ class GenreJPAImplTest {
     void checkingGetAll() {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
-        genreJPA.save(genre);
-        List<Genre> genres = genreJPA.getAll();
+        em.persist(genre);
+        List<Genre> genres = genreJPARepository.getAll();
         assertThat(genres.size()).isEqualTo(EXPECTED_LIST_GENRES_SIZE);
         assertThat(genres).contains(genre);
     }
@@ -52,7 +55,7 @@ class GenreJPAImplTest {
     void checkingSave() {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
-        genreJPA.save(genre);
+        genreJPARepository.save(genre);
         assertThat(genre.getId()).isGreaterThan(ZERO);
     }
 
@@ -61,11 +64,11 @@ class GenreJPAImplTest {
     void checkingDeleteById() {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
-        genreJPA.save(genre);
+        em.persist(genre);
         assertThat(genre.getId()).isGreaterThan(ZERO);
 
-        genreJPA.deleteById(genre.getId());
+        genreJPARepository.deleteById(genre.getId());
 
-        assertThat(genreJPA.getAll()).doesNotContain(genre);
+        assertThat(genreJPARepository.getAll()).doesNotContain(genre);
     }
 }

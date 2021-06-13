@@ -5,7 +5,7 @@ import ru.otus.amezgin.library.domain.Book;
 import java.util.List;
 import java.util.Optional;
 
-public interface BookJPA {
+public interface BookJPARepository {
 
     Optional<Book> getById(Long id);
 

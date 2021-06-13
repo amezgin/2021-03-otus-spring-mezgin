@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentJPAImpl implements CommentJPA {
+public class CommentJPARepositoryImpl implements CommentJPARepository {
 
     @PersistenceContext
     private final EntityManager em;

@@ -5,7 +5,7 @@ import ru.otus.amezgin.library.domain.Comment;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentJPA {
+public interface CommentJPARepository {
 
     Optional<Comment> getById(Long id);
 
