@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Author;
 
@@ -24,12 +25,15 @@ class AuthorRepositoryImplTest {
     @Autowired
     private AuthorRepository authorRepository;
 
+    @Autowired
+    private TestEntityManager em;
+
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
         Author author = new Author();
         author.setFullName(NEW_AUTHOR);
-        authorRepository.save(author);
+        em.persist(author);
         assertThat(authorRepository.findById(author.getId())).isNotEmpty();
     }
 
@@ -39,7 +43,7 @@ class AuthorRepositoryImplTest {
     void checkingGetAll() {
         Author author = new Author();
         author.setFullName(NEW_AUTHOR);
-        authorRepository.save(author);
+        em.persist(author);
         List<Author> authors = authorRepository.findAll();
         assertThat(authors.size()).isEqualTo(EXPECTED_LIST_AUTHORS_SIZE);
         assertThat(authors).contains(author);
@@ -57,7 +61,7 @@ class AuthorRepositoryImplTest {
     @DisplayName("is checking deleteById method.")
     @Test
     void checkingDeleteById() {
-        Author author = authorRepository.findById(AUTHOR_ID).get();
+        Author author = em.find(Author.class, AUTHOR_ID);
         assertThat(author.getId()).isEqualTo(AUTHOR_ID);
 
         authorRepository.deleteById(AUTHOR_ID);

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Genre;
 
@@ -23,12 +24,15 @@ class GenreRepositoryImplTest {
     @Autowired
     private GenreRepository genreRepository;
 
+    @Autowired
+    private TestEntityManager em;
+
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
-        genreRepository.save(genre);
+        em.persist(genre);
         assertThat(genreRepository.findById(genre.getId())).isNotEmpty();
     }
 
@@ -38,7 +42,7 @@ class GenreRepositoryImplTest {
     void checkingGetAll() {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
-        genreRepository.save(genre);
+        em.persist(genre);
         List<Genre> genres = genreRepository.findAll();
         assertThat(genres.size()).isEqualTo(EXPECTED_LIST_GENRES_SIZE);
         assertThat(genres).contains(genre);
@@ -58,7 +62,7 @@ class GenreRepositoryImplTest {
     void checkingDeleteById() {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
-        genreRepository.save(genre);
+        em.persist(genre);
         assertThat(genre.getId()).isGreaterThan(ZERO);
 
         genreRepository.deleteById(genre.getId());

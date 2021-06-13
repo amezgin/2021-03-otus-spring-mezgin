@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Author;
 import ru.otus.amezgin.library.domain.Book;
@@ -34,6 +35,9 @@ class BookRepositoryImplTest {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private TestEntityManager em;
+
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
@@ -44,7 +48,7 @@ class BookRepositoryImplTest {
         book.setAuthor(author);
         book.setGenres(genre);
 
-        bookRepository.save(book);
+        em.persist(book);
         assertThat(bookRepository.findById(author.getId())).isNotEmpty();
     }
 
@@ -59,7 +63,7 @@ class BookRepositoryImplTest {
         book.setAuthor(author);
         book.setGenres(genre);
 
-        bookRepository.save(book);
+        em.persist(book);
         List<Book> books = bookRepository.findAll();
         assertThat(books.size()).isEqualTo(EXPECTED_LIST_BOOK_SIZE);
         assertThat(books).contains(book);
@@ -90,17 +94,17 @@ class BookRepositoryImplTest {
         book.setAuthor(author);
         book.setGenres(genre);
 
-        bookRepository.save(book);
+        em.persist(book);
         book.setTitle(UPDATE_BOOK_TITLE);
         bookRepository.save(book);
-        Book actualBook = bookRepository.findById(book.getId()).get();
+        Book actualBook = em.find(Book.class, book.getId());
         assertThat(book.getTitle()).isEqualTo(actualBook.getTitle());
     }
 
     @DisplayName("is checking deleteById method.")
     @Test
     void checkingDeleteById() {
-        Book book = bookRepository.findById(BOOK_ID).get();
+        Book book = em.find(Book.class, BOOK_ID);
         assertThat(book.getId()).isEqualTo(BOOK_ID);
 
         bookRepository.deleteById(BOOK_ID);

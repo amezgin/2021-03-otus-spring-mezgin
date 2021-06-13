@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Book;
 import ru.otus.amezgin.library.domain.Comment;
@@ -28,17 +29,17 @@ class CommentRepositoryImplTest {
     private CommentRepository commentRepository;
 
     @Autowired
-    private BookRepository bookRepository;
+    private TestEntityManager em;
 
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
-        Book book = bookRepository.findById(BOOK_ID).get();
+        Book book = em.find(Book.class, BOOK_ID);
         Comment comment = new Comment();
         comment.setBook(book);
         comment.setUserName(ADMIN);
         comment.setText(COMMENT_1);
-        commentRepository.save(comment);
+        em.persist(comment);
         assertThat(commentRepository.findById(comment.getId())).isNotEmpty();
     }
 
@@ -53,7 +54,7 @@ class CommentRepositoryImplTest {
     @DisplayName("is checking save method.")
     @Test
     void checkingSave() {
-        Book book = bookRepository.findById(BOOK_ID).get();
+        Book book = em.find(Book.class, BOOK_ID);
         Comment comment = new Comment();
         comment.setBook(book);
         comment.setUserName(ADMIN);
@@ -65,7 +66,7 @@ class CommentRepositoryImplTest {
     @DisplayName("is checking deleteById method.")
     @Test
     void checkingDeleteById() {
-        Comment comment = commentRepository.findById(COMMENT_ID).get();
+        Comment comment = em.find(Comment.class, COMMENT_ID);
         assertThat(comment.getId()).isEqualTo(COMMENT_ID);
 
         commentRepository.deleteById(comment.getId());

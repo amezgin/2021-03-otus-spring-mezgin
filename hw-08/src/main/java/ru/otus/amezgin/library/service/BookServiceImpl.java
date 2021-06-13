@@ -2,10 +2,10 @@ package ru.otus.amezgin.library.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.amezgin.library.repository.BookRepository;
 import ru.otus.amezgin.library.domain.Book;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,11 +15,13 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Book> getById(Long id) {
         return bookRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Book> getAll() {
         return bookRepository.findAll();

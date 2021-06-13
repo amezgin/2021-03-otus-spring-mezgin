@@ -2,10 +2,10 @@ package ru.otus.amezgin.library.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.amezgin.library.repository.AuthorRepository;
 import ru.otus.amezgin.library.domain.Author;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,16 +15,18 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
 
-    @Override
+    @Transactional(readOnly = true)    @Override
     public Optional<Author> getById(Long id) {
         return authorRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Author> getByName(String name) {
         return authorRepository.getByFullName(name);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Author> getAll() {
         return authorRepository.findAll();
