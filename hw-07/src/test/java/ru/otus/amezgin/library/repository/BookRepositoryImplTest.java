@@ -1,5 +1,6 @@
 package ru.otus.amezgin.library.repository;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +12,16 @@ import ru.otus.amezgin.library.domain.Author;
 import ru.otus.amezgin.library.domain.Book;
 import ru.otus.amezgin.library.domain.Genre;
 
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import({BookJPARepositoryImpl.class, AuthorJPARepositoryImpl.class, GenreJPARepositoryImpl.class})
+@Import({BookRepositoryImpl.class})
 @DisplayName("The BookJPAImpl class")
-class BookJPARepositoryImplTest {
+class BookRepositoryImplTest {
 
     public static final String AUTHOR = "Перумов, Н.";
     public static final String BOOK_TITLE = "Сумеречный дозор";
@@ -28,14 +30,11 @@ class BookJPARepositoryImplTest {
     public static final int EXPECTED_LIST_BOOK_SIZE = 4;
     public static final int ZERO = 0;
 
-    @Autowired
-    private AuthorJPARepository authorJPARepository;
+    public static final String QUERY_FIND_ALL_GENRES = "select g from Genre g";
+    public static final String QUERY_FIND_AUTHOR_BY_NAME = "select a from Author a where a.fullName = :name";
 
     @Autowired
-    private GenreJPARepository genreJPARepository;
-
-    @Autowired
-    private BookJPARepository bookJPARepository;
+    private BookRepository bookRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -43,30 +42,34 @@ class BookJPARepositoryImplTest {
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
-        List<Genre> genre = genreJPARepository.getAll();
-        Author author = authorJPARepository.getByName(AUTHOR).get();
+        List<Genre> genre = em.getEntityManager().createQuery(QUERY_FIND_ALL_GENRES, Genre.class).getResultList();
+        Author author = em.getEntityManager().createQuery(
+                QUERY_FIND_AUTHOR_BY_NAME, Author.class).setParameter("name", AUTHOR)
+                .getResultList().stream().findFirst().get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
         book.setGenres(genre);
 
         em.persist(book);
-        assertThat(bookJPARepository.getById(author.getId())).isNotEmpty();
+        assertThat(bookRepository.getById(author.getId())).isNotEmpty();
     }
 
     @DisplayName("is checking getAll method.")
     @Test
     @DirtiesContext(methodMode = BEFORE_METHOD)
     void checkingGetAll() {
-        List<Genre> genre = genreJPARepository.getAll();
-        Author author = authorJPARepository.getByName(AUTHOR).get();
+        List<Genre> genre = em.getEntityManager().createQuery(QUERY_FIND_ALL_GENRES, Genre.class).getResultList();
+        Author author = em.getEntityManager().createQuery(
+                QUERY_FIND_AUTHOR_BY_NAME, Author.class).setParameter("name", AUTHOR)
+                .getResultList().stream().findFirst().get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
         book.setGenres(genre);
 
         em.persist(book);
-        List<Book> books = bookJPARepository.getAll();
+        List<Book> books = bookRepository.getAll();
         assertThat(books.size()).isEqualTo(EXPECTED_LIST_BOOK_SIZE);
         assertThat(books).contains(book);
     }
@@ -74,14 +77,16 @@ class BookJPARepositoryImplTest {
     @DisplayName("is checking save method.")
     @Test
     void checkingSave() {
-        List<Genre> genre = genreJPARepository.getAll();
-        Author author = authorJPARepository.getByName(AUTHOR).get();
+        List<Genre> genre = em.getEntityManager().createQuery(QUERY_FIND_ALL_GENRES, Genre.class).getResultList();
+        Author author = em.getEntityManager().createQuery(
+                QUERY_FIND_AUTHOR_BY_NAME, Author.class).setParameter("name", AUTHOR)
+                .getResultList().stream().findFirst().get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
         book.setGenres(genre);
 
-        bookJPARepository.save(book);
+        bookRepository.save(book);
         assertThat(book.getId()).isGreaterThan(ZERO);
         assertThat(book.getTitle()).isEqualTo(BOOK_TITLE);
     }
@@ -89,8 +94,10 @@ class BookJPARepositoryImplTest {
     @DisplayName("is checking update method.")
     @Test
     void checkingUpdate() {
-        List<Genre> genre = genreJPARepository.getAll();
-        Author author = authorJPARepository.getByName(AUTHOR).get();
+        List<Genre> genre = em.getEntityManager().createQuery(QUERY_FIND_ALL_GENRES, Genre.class).getResultList();
+        Author author = em.getEntityManager().createQuery(
+                QUERY_FIND_AUTHOR_BY_NAME, Author.class).setParameter("name", AUTHOR)
+                .getResultList().stream().findFirst().get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
@@ -98,7 +105,7 @@ class BookJPARepositoryImplTest {
 
         em.persist(book);
         book.setTitle(UPDATE_BOOK_TITLE);
-        bookJPARepository.update(book);
+        bookRepository.update(book);
         Book actualBook = em.find(Book.class, book.getId());
         assertThat(book.getTitle()).isEqualTo(actualBook.getTitle());
     }
@@ -109,8 +116,8 @@ class BookJPARepositoryImplTest {
         Book book = em.find(Book.class, BOOK_ID);
         assertThat(book.getId()).isEqualTo(BOOK_ID);
 
-        bookJPARepository.deleteById(BOOK_ID);
+        bookRepository.deleteById(BOOK_ID);
 
-        assertThat(bookJPARepository.getAll()).doesNotContain(book);
+        assertThat(bookRepository.getAll()).doesNotContain(book);
     }
 }

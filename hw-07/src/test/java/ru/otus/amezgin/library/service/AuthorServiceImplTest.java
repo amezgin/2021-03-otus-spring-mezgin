@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.amezgin.library.domain.Author;
-import ru.otus.amezgin.library.repository.AuthorJPARepository;
+import ru.otus.amezgin.library.repository.AuthorRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +28,7 @@ class AuthorServiceImplTest {
     public static final String NEW_AUTHOR = "Лукьяненко, С.";
 
     @MockBean
-    private AuthorJPARepository authorJPARepository;
+    private AuthorRepository authorRepository;
 
     @Autowired
     private AuthorService authorService;
@@ -38,7 +38,7 @@ class AuthorServiceImplTest {
     void checkingGetById() {
         Author expectedAuthor = new Author(AUTHOR_ID_1, GARRISSON);
 
-        doReturn(Optional.of(expectedAuthor)).when(authorJPARepository).getById(AUTHOR_ID_1);
+        doReturn(Optional.of(expectedAuthor)).when(authorRepository).getById(AUTHOR_ID_1);
         Author actualAuthor = authorService.getById(AUTHOR_ID_1).get();
 
         assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
@@ -51,7 +51,7 @@ class AuthorServiceImplTest {
         Author author1 = new Author(AUTHOR_ID_1, GARRISSON);
         Author author2 = new Author(AUTHOR_ID_2, PERUMOV);
         List<Author> list = List.of(author1, author2);
-        doReturn(list).when(authorJPARepository).getAll();
+        doReturn(list).when(authorRepository).getAll();
 
         List<Author> actList = authorService.getAll();
 
@@ -62,7 +62,7 @@ class AuthorServiceImplTest {
     @Test
     void checkingSave() {
         Author expectedAuthor = new Author(AUTHOR_ID_2, NEW_AUTHOR);
-        doReturn(expectedAuthor).when(authorJPARepository).save(expectedAuthor);
+        doReturn(expectedAuthor).when(authorRepository).save(expectedAuthor);
         Author actualAuthor = authorService.save(expectedAuthor);
         assertThat(actualAuthor.getId()).isGreaterThan(ZERO_ID);
         assertThat(actualAuthor.getFullName()).isEqualTo(expectedAuthor.getFullName());

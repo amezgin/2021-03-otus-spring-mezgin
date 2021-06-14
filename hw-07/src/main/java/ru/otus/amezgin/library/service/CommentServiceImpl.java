@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.amezgin.library.domain.Comment;
-import ru.otus.amezgin.library.repository.CommentJPARepository;
+import ru.otus.amezgin.library.repository.CommentRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,34 +13,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentJPARepository commentJPARepository;
+    private final CommentRepository commentRepository;
 
     @Transactional(readOnly = true)
     @Override
     public Optional<Comment> getById(Long id) {
-        return commentJPARepository.getById(id);
+        return commentRepository.getById(id);
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<Comment> getAll() {
-        return commentJPARepository.getAll();
+        return commentRepository.getAll();
     }
 
     @Transactional
     @Override
     public Comment save(Comment comment) {
-        return commentJPARepository.save(comment);
+        return commentRepository.save(comment);
     }
 
     @Override
     public List<Comment> getCommentByBookId(Long bookId) {
-        return commentJPARepository.getCommentByBookId(bookId);
+        return commentRepository.getCommentByBookId(bookId);
     }
 
     @Transactional
     @Override
     public void deleteById(Long id) {
-        commentJPARepository.deleteById(id);
+        commentRepository.deleteById(id);
     }
 }

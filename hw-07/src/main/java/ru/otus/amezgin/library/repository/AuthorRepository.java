@@ -5,7 +5,7 @@ import ru.otus.amezgin.library.domain.Author;
 import java.util.List;
 import java.util.Optional;
 
-public interface AuthorJPARepository {
+public interface AuthorRepository {
 
     Optional<Author> getById(Long id);
 

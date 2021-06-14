@@ -15,16 +15,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import(GenreJPARepositoryImpl.class)
+@Import(GenreRepositoryImpl.class)
 @DisplayName("The GenreJPAImpl class")
-class GenreJPARepositoryImplTest {
+class GenreRepositoryImplTest {
 
     public static final String NEW_GENRE = "Приключения";
     public static final int EXPECTED_LIST_GENRES_SIZE = 3;
     public static final long ZERO = 0;
 
     @Autowired
-    private GenreJPARepository genreJPARepository;
+    private GenreRepository genreRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -35,7 +35,7 @@ class GenreJPARepositoryImplTest {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
         em.persist(genre);
-        assertThat(genreJPARepository.getById(genre.getId())).isNotEmpty();
+        assertThat(genreRepository.getById(genre.getId())).isNotEmpty();
     }
 
     @DisplayName("is checking getAll method.")
@@ -45,7 +45,7 @@ class GenreJPARepositoryImplTest {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
         em.persist(genre);
-        List<Genre> genres = genreJPARepository.getAll();
+        List<Genre> genres = genreRepository.getAll();
         assertThat(genres.size()).isEqualTo(EXPECTED_LIST_GENRES_SIZE);
         assertThat(genres).contains(genre);
     }
@@ -55,7 +55,7 @@ class GenreJPARepositoryImplTest {
     void checkingSave() {
         Genre genre = new Genre();
         genre.setGenreName(NEW_GENRE);
-        genreJPARepository.save(genre);
+        genreRepository.save(genre);
         assertThat(genre.getId()).isGreaterThan(ZERO);
     }
 
@@ -67,8 +67,8 @@ class GenreJPARepositoryImplTest {
         em.persist(genre);
         assertThat(genre.getId()).isGreaterThan(ZERO);
 
-        genreJPARepository.deleteById(genre.getId());
+        genreRepository.deleteById(genre.getId());
 
-        assertThat(genreJPARepository.getAll()).doesNotContain(genre);
+        assertThat(genreRepository.getAll()).doesNotContain(genre);
     }
 }

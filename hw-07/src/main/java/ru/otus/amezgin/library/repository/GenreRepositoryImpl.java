@@ -6,13 +6,14 @@ import ru.otus.amezgin.library.domain.Genre;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class GenreJPARepositoryImpl implements GenreJPARepository {
+public class GenreRepositoryImpl implements GenreRepository {
 
     @PersistenceContext
     private final EntityManager em;
@@ -42,6 +43,8 @@ public class GenreJPARepositoryImpl implements GenreJPARepository {
 
     @Override
     public void deleteById(Long id) {
-        Optional.ofNullable(em.find(Genre.class, id)).ifPresent(em::remove);
+        Query q = em.createQuery("delete from Genre g where g.id = :id");
+        q.setParameter("id", id);
+        q.executeUpdate();
     }
 }

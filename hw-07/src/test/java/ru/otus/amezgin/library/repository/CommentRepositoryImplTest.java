@@ -16,9 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import({CommentJPARepositoryImpl.class})
+@Import({CommentRepositoryImpl.class})
 @DisplayName("The CommentJPAImpl class")
-class CommentJPARepositoryImplTest {
+class CommentRepositoryImplTest {
 
     public static final int EXPECTED_LIST_COMMENT_SIZE = 3;
     public static final int ZERO = 0;
@@ -28,7 +28,7 @@ class CommentJPARepositoryImplTest {
     public static final String COMMENT_1 = "Чушь!";
 
     @Autowired
-    private CommentJPARepository commentJPARepository;
+    private CommentRepository commentRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -42,14 +42,14 @@ class CommentJPARepositoryImplTest {
         comment.setUserName(ADMIN);
         comment.setText(COMMENT_1);
         em.persist(comment);
-        assertThat(commentJPARepository.getById(comment.getId())).isNotEmpty();
+        assertThat(commentRepository.getById(comment.getId())).isNotEmpty();
     }
 
     @DisplayName("is checking getAll method.")
     @Test
     @DirtiesContext(methodMode = BEFORE_METHOD)
     void checkingGetAll() {
-        List<Comment> genres = commentJPARepository.getAll();
+        List<Comment> genres = commentRepository.getAll();
         assertThat(genres.size()).isEqualTo(EXPECTED_LIST_COMMENT_SIZE);
     }
 
@@ -61,7 +61,7 @@ class CommentJPARepositoryImplTest {
         comment.setBook(book);
         comment.setUserName(ADMIN);
         comment.setText(COMMENT_1);
-        commentJPARepository.save(comment);
+        commentRepository.save(comment);
         assertThat(comment.getId()).isGreaterThan(ZERO);
     }
 
@@ -71,8 +71,8 @@ class CommentJPARepositoryImplTest {
         Comment comment = em.find(Comment.class, COMMENT_ID);
         assertThat(comment.getId()).isEqualTo(COMMENT_ID);
 
-        commentJPARepository.deleteById(comment.getId());
+        commentRepository.deleteById(comment.getId());
 
-        assertThat(commentJPARepository.getAll()).doesNotContain(comment);
+        assertThat(commentRepository.getAll()).doesNotContain(comment);
     }
 }

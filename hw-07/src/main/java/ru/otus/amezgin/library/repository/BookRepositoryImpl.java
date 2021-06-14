@@ -1,16 +1,18 @@
 package ru.otus.amezgin.library.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.otus.amezgin.library.domain.Book;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
-public class BookJPARepositoryImpl implements BookJPARepository {
+public class BookRepositoryImpl implements BookRepository {
 
     @PersistenceContext
     private final EntityManager em;

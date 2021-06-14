@@ -6,13 +6,14 @@ import ru.otus.amezgin.library.domain.Comment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentJPARepositoryImpl implements CommentJPARepository {
+public class CommentRepositoryImpl implements CommentRepository {
 
     @PersistenceContext
     private final EntityManager em;
@@ -42,6 +43,8 @@ public class CommentJPARepositoryImpl implements CommentJPARepository {
 
     @Override
     public void deleteById(Long id) {
-        Optional.ofNullable(em.find(Comment.class, id)).ifPresent(em::remove);
+        Query q = em.createQuery("delete from Comment c where c.id = :id");
+        q.setParameter("id", id);
+        q.executeUpdate();
     }
 }

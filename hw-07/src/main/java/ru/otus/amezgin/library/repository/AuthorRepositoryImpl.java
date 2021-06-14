@@ -6,13 +6,14 @@ import ru.otus.amezgin.library.domain.Author;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class AuthorJPARepositoryImpl implements AuthorJPARepository {
+public class AuthorRepositoryImpl implements AuthorRepository {
 
     @PersistenceContext
     private final EntityManager em;
@@ -42,6 +43,8 @@ public class AuthorJPARepositoryImpl implements AuthorJPARepository {
 
     @Override
     public void deleteById(Long id) {
-        Optional.ofNullable(em.find(Author.class, id)).ifPresent(em::remove);
+        Query q = em.createQuery("delete from Author a where a.id = :id");
+        q.setParameter("id", id);
+        q.executeUpdate();
     }
 }

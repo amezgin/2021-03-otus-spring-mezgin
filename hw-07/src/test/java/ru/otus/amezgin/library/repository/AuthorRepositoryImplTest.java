@@ -15,9 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import(AuthorJPARepositoryImpl.class)
+@Import(AuthorRepositoryImpl.class)
 @DisplayName("The AuthorJPAImpl class")
-class AuthorJPARepositoryImplTest {
+class AuthorRepositoryImplTest {
 
     public static final String NEW_AUTHOR = "Лукьяненко, С.";
     public static final Long AUTHOR_ID = 1L;
@@ -25,7 +25,7 @@ class AuthorJPARepositoryImplTest {
     public static final long ZERO_ID = 0;
 
     @Autowired
-    private AuthorJPARepository authorJPARepository;
+    private AuthorRepository authorRepository;
 
     @Autowired
     private TestEntityManager em;
@@ -36,7 +36,7 @@ class AuthorJPARepositoryImplTest {
         Author author = new Author();
         author.setFullName(NEW_AUTHOR);
         em.persist(author);
-        assertThat(authorJPARepository.getById(author.getId())).isNotEmpty();
+        assertThat(authorRepository.getById(author.getId())).isNotEmpty();
     }
 
     @DisplayName("is checking getAll method.")
@@ -46,7 +46,7 @@ class AuthorJPARepositoryImplTest {
         Author author = new Author();
         author.setFullName(NEW_AUTHOR);
         em.persist(author);
-        List<Author> authors = authorJPARepository.getAll();
+        List<Author> authors = authorRepository.getAll();
         assertThat(authors.size()).isEqualTo(EXPECTED_LIST_AUTHORS_SIZE);
         assertThat(authors).contains(author);
     }
@@ -56,7 +56,7 @@ class AuthorJPARepositoryImplTest {
     void checkingSave() {
         Author author = new Author();
         author.setFullName(NEW_AUTHOR);
-        authorJPARepository.save(author);
+        authorRepository.save(author);
         assertThat(author.getId()).isGreaterThan(ZERO_ID);
     }
 
@@ -66,8 +66,8 @@ class AuthorJPARepositoryImplTest {
         Author author = em.find(Author.class, AUTHOR_ID);
         assertThat(author.getId()).isEqualTo(AUTHOR_ID);
 
-        authorJPARepository.deleteById(AUTHOR_ID);
+        authorRepository.deleteById(AUTHOR_ID);
 
-        assertThat(authorJPARepository.getAll()).doesNotContain(author);
+        assertThat(authorRepository.getAll()).doesNotContain(author);
     }
 }
