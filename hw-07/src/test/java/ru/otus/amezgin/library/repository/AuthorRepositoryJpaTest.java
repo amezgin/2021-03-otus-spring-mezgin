@@ -15,9 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import(AuthorRepositoryImpl.class)
-@DisplayName("The AuthorJPAImpl class")
-class AuthorRepositoryImplTest {
+@Import(AuthorRepositoryJpa.class)
+@DisplayName("The AuthorRepositoryJpa class")
+class AuthorRepositoryJpaTest {
 
     public static final String NEW_AUTHOR = "Лукьяненко, С.";
     public static final Long AUTHOR_ID = 1L;

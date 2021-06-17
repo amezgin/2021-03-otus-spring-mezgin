@@ -23,8 +23,7 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-    @Fetch(FetchMode.SELECT)
-    @ManyToOne(targetEntity = Author.class)
+    @ManyToOne(targetEntity = Author.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     private Author author;
 

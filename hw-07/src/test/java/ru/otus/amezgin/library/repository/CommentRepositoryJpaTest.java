@@ -16,9 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import({CommentRepositoryImpl.class})
-@DisplayName("The CommentJPAImpl class")
-class CommentRepositoryImplTest {
+@Import({CommentRepositoryJpa.class})
+@DisplayName("The CommentRepositoryJpa class")
+class CommentRepositoryJpaTest {
 
     public static final int EXPECTED_LIST_COMMENT_SIZE = 3;
     public static final int ZERO = 0;

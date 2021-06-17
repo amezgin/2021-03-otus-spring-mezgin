@@ -1,6 +1,5 @@
 package ru.otus.amezgin.library.repository;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +11,15 @@ import ru.otus.amezgin.library.domain.Author;
 import ru.otus.amezgin.library.domain.Book;
 import ru.otus.amezgin.library.domain.Genre;
 
-import javax.persistence.TypedQuery;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import({BookRepositoryImpl.class})
-@DisplayName("The BookJPAImpl class")
-class BookRepositoryImplTest {
+@Import({BookRepositoryJpa.class})
+@DisplayName("The BookRepositoryJpa class")
+class BookRepositoryJpaTest {
 
     public static final String AUTHOR = "Перумов, Н.";
     public static final String BOOK_TITLE = "Сумеречный дозор";

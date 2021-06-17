@@ -15,9 +15,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@Import(GenreRepositoryImpl.class)
-@DisplayName("The GenreJPAImpl class")
-class GenreRepositoryImplTest {
+@Import(GenreRepositoryJpa.class)
+@DisplayName("The GenreRepositoryJpa class")
+class GenreRepositoryJpaTest {
 
     public static final String NEW_GENRE = "Приключения";
     public static final int EXPECTED_LIST_GENRES_SIZE = 3;

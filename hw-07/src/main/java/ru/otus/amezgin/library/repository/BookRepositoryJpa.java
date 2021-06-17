@@ -12,7 +12,7 @@ import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
-public class BookRepositoryImpl implements BookRepository {
+public class BookRepositoryJpa implements BookRepository {
 
     @PersistenceContext
     private final EntityManager em;
@@ -24,7 +24,7 @@ public class BookRepositoryImpl implements BookRepository {
 
     @Override
     public List<Book> getAll() {
-        return em.createQuery("select b from Book b ", Book.class).getResultList();
+        return em.createQuery("select b from Book b join fetch b.author a", Book.class).getResultList();
     }
 
     @Override
