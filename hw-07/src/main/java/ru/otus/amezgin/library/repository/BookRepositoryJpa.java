@@ -41,6 +41,8 @@ public class BookRepositoryJpa implements BookRepository {
 
     @Override
     public void deleteById(Long id) {
-        Optional.ofNullable(em.find(Book.class, id)).ifPresent(em::remove);
+        Query q = em.createQuery("delete from Book b where b.id = :id");
+        q.setParameter("id", id);
+        q.executeUpdate();
     }
 }
