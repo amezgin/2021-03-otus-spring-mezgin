@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
 @DataJpaTest
-@DisplayName("The BookJPAImpl class")
-class BookRepositoryImplTest {
+@DisplayName("The BookRepository class")
+class BookRepositoryTest {
 
     public static final String AUTHOR = "Перумов, Н.";
     public static final String BOOK_TITLE = "Сумеречный дозор";
@@ -26,11 +26,8 @@ class BookRepositoryImplTest {
     public static final int EXPECTED_LIST_BOOK_SIZE = 4;
     public static final int ZERO = 0;
 
-    @Autowired
-    private AuthorRepository authorRepository;
-
-    @Autowired
-    private GenreRepository genreRepository;
+    public static final String QUERY_FIND_ALL_GENRES = "select g from Genre g";
+    public static final String QUERY_FIND_AUTHOR_BY_NAME = "select a from Author a where a.fullName = :name";
 
     @Autowired
     private BookRepository bookRepository;
@@ -41,8 +38,10 @@ class BookRepositoryImplTest {
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() {
-        List<Genre> genre = genreRepository.findAll();
-        Author author = authorRepository.getByFullName(AUTHOR).get();
+        List<Genre> genre = em.getEntityManager().createQuery(QUERY_FIND_ALL_GENRES, Genre.class).getResultList();
+        Author author = em.getEntityManager().createQuery(
+                QUERY_FIND_AUTHOR_BY_NAME, Author.class).setParameter("name", AUTHOR)
+                .getResultList().stream().findFirst().get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
@@ -56,8 +55,10 @@ class BookRepositoryImplTest {
     @Test
     @DirtiesContext(methodMode = BEFORE_METHOD)
     void checkingGetAll() {
-        List<Genre> genre = genreRepository.findAll();
-        Author author = authorRepository.getByFullName(AUTHOR).get();
+        List<Genre> genre = em.getEntityManager().createQuery(QUERY_FIND_ALL_GENRES, Genre.class).getResultList();
+        Author author = em.getEntityManager().createQuery(
+                QUERY_FIND_AUTHOR_BY_NAME, Author.class).setParameter("name", AUTHOR)
+                .getResultList().stream().findFirst().get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
@@ -72,8 +73,10 @@ class BookRepositoryImplTest {
     @DisplayName("is checking save method.")
     @Test
     void checkingSave() {
-        List<Genre> genre = genreRepository.findAll();
-        Author author = authorRepository.getByFullName(AUTHOR).get();
+        List<Genre> genre = em.getEntityManager().createQuery(QUERY_FIND_ALL_GENRES, Genre.class).getResultList();
+        Author author = em.getEntityManager().createQuery(
+                QUERY_FIND_AUTHOR_BY_NAME, Author.class).setParameter("name", AUTHOR)
+                .getResultList().stream().findFirst().get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
@@ -87,8 +90,10 @@ class BookRepositoryImplTest {
     @DisplayName("is checking update method.")
     @Test
     void checkingUpdate() {
-        List<Genre> genre = genreRepository.findAll();
-        Author author = authorRepository.getByFullName(AUTHOR).get();
+        List<Genre> genre = em.getEntityManager().createQuery(QUERY_FIND_ALL_GENRES, Genre.class).getResultList();
+        Author author = em.getEntityManager().createQuery(
+                QUERY_FIND_AUTHOR_BY_NAME, Author.class).setParameter("name", AUTHOR)
+                .getResultList().stream().findFirst().get();
         Book book = new Book();
         book.setTitle(BOOK_TITLE);
         book.setAuthor(author);
@@ -104,11 +109,20 @@ class BookRepositoryImplTest {
     @DisplayName("is checking deleteById method.")
     @Test
     void checkingDeleteById() {
-        Book book = em.find(Book.class, BOOK_ID);
-        assertThat(book.getId()).isEqualTo(BOOK_ID);
+        List<Genre> genre = em.getEntityManager().createQuery(QUERY_FIND_ALL_GENRES, Genre.class).getResultList();
+        Author author = em.getEntityManager().createQuery(
+                QUERY_FIND_AUTHOR_BY_NAME, Author.class).setParameter("name", AUTHOR)
+                .getResultList().stream().findFirst().get();
+        Book book = new Book();
+        book.setTitle(BOOK_TITLE);
+        book.setAuthor(author);
+        book.setGenres(genre);
 
-        bookRepository.deleteById(BOOK_ID);
+        em.persist(book);
+        book.setTitle(UPDATE_BOOK_TITLE);
+        bookRepository.save(book);
+        Book actualBook = em.find(Book.class, book.getId());
 
-        assertThat(bookRepository.findAll()).doesNotContain(book);
+        assertThat(book.getTitle()).isEqualTo(actualBook.getTitle());
     }
 }

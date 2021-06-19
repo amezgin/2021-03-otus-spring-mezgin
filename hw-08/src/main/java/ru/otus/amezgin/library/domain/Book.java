@@ -23,8 +23,7 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-    @Fetch(FetchMode.JOIN)
-    @ManyToOne(targetEntity = Author.class)
+    @ManyToOne(targetEntity = Author.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id")
     private Author author;
 
@@ -41,6 +40,6 @@ public class Book {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @Fetch(FetchMode.SUBSELECT)
-    @OneToMany(targetEntity = Comment.class, mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Comment.class, mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 }
