@@ -24,9 +24,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @Override
     public List<Book> getAll() {
-        List<Book> list =  bookRepository.findAll();
-        System.out.println(list);
-        return list;
+        return bookRepository.findAll();
     }
 
     @Transactional
@@ -38,6 +36,8 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public Book update(Book book) {
+        Book existBook = bookRepository.findById(book.getId()).orElseThrow();
+        book.setId(existBook.getId());
         return bookRepository.save(book);
     }
 

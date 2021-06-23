@@ -20,9 +20,9 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getById(id).orElseThrow());
     }
 
-    @GetMapping(value = "/api/v1/comments", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<List<Comment>> getAll() {
-        return ResponseEntity.ok(commentService.getAll());
+    @GetMapping(value = "/api/v1/comment/book/{id}", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<List<Comment>> getAllCommentsByBookId(@PathVariable Long id) {
+        return ResponseEntity.ok(commentService.getCommentByBookId(id));
     }
 
     @PostMapping(value = "/api/v1/comment", produces = "application/json;charset=UTF-8")

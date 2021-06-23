@@ -20,7 +20,7 @@ public class AuthorController {
         return ResponseEntity.ok(authorService.getById(id).orElseThrow());
     }
 
-    @GetMapping(value = "/api/v1/authors", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "/api/v1/author", produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Author>> getAll() {
         return ResponseEntity.ok(authorService.getAll());
     }

@@ -20,7 +20,7 @@ public class BookController {
         return ResponseEntity.ok(bookService.getById(id).orElseThrow());
     }
 
-    @GetMapping(value = "/api/v1/books", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "/api/v1/book", produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Book>> getAll() {
         return ResponseEntity.ok(bookService.getAll());
     }
@@ -30,8 +30,9 @@ public class BookController {
         return ResponseEntity.ok(bookService.save(book));
     }
 
-    @PutMapping(value = "/api/v1/book", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Book> updateBook(@RequestBody Book book) {
+    @PutMapping(value = "/api/v1/book/{id}", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
+        book.setId(id);
         return ResponseEntity.ok(bookService.update(book));
     }
 

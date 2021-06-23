@@ -20,7 +20,7 @@ public class GenreController {
         return ResponseEntity.ok(genreService.getById(id).orElseThrow());
     }
 
-    @GetMapping(value = "/api/v1/genres", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "/api/v1/genre", produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<Genre>> getAll() {
         return ResponseEntity.ok(genreService.getAll());
     }
