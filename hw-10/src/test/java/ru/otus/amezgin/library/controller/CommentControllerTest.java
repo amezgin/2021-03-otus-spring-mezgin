@@ -35,6 +35,7 @@ public class CommentControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    public static final String USER_CREDENTIALS = "dXNlcjp1c2Vy";
     public static final long AUTHOR_ID_1 = 1L;
     public static final String AUTHOR_1 = "Гаррисон, Г.";
     public static final long GENRE_ID_1 = 1L;
@@ -59,6 +60,7 @@ public class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/comment/1")
                 .contentType("application/json")
+                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -82,6 +84,7 @@ public class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/comment/book/1")
                 .contentType("application/json")
+                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();

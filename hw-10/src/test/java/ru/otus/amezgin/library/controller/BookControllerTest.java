@@ -32,6 +32,7 @@ public class BookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    public static final String USER_CREDENTIALS = "dXNlcjp1c2Vy";
     public static final long AUTHOR_ID_1 = 1L;
     public static final long AUTHOR_ID_2 = 2L;
     public static final String AUTHOR_1 = "Гаррисон, Г.";
@@ -58,6 +59,7 @@ public class BookControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/book/1")
                 .contentType("application/json")
+                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -84,6 +86,7 @@ public class BookControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/book")
                 .contentType("application/json")
+                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -104,6 +107,7 @@ public class BookControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/book")
                 .contentType("application/json")
+                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -125,6 +129,7 @@ public class BookControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(put("/api/v1/book/1")
                 .contentType("application/json")
+                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -138,7 +143,8 @@ public class BookControllerTest {
     @Test
     void checkingDelete() throws Exception {
         MvcResult mvcResult = mockMvc.perform(delete("/api/v1/book/1")
-                .contentType("application/json"))
+                .contentType("application/json")
+                .header("Authorization", "Basic " + USER_CREDENTIALS))
                 .andExpect(status().isOk())
                 .andReturn();
 

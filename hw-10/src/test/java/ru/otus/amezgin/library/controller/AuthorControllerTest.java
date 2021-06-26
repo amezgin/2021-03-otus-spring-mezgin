@@ -27,6 +27,8 @@ public class AuthorControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    public static final String USER_CREDENTIALS = "dXNlcjp1c2Vy";
+    public static final String ADMIN_CREDENTIALS = "YWRtaW46YWRtaW4=";
     public static final long AUTHOR_ID_1 = 1L;
     public static final long AUTHOR_ID_2 = 2L;
     public static final String AUTHOR_1 = "Гаррисон, Г.";
@@ -41,6 +43,7 @@ public class AuthorControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/author/1")
                 .contentType("application/json")
+                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -61,6 +64,7 @@ public class AuthorControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/author")
                 .contentType("application/json")
+                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -79,6 +83,7 @@ public class AuthorControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/author")
                 .contentType("application/json")
+                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
