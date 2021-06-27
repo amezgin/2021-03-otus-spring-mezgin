@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import ru.otus.amezgin.library.domain.Genre;
@@ -27,13 +28,12 @@ public class GenreControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public static final String USER_CREDENTIALS = "dXNlcjp1c2Vy";
-    public static final String ADMIN_CREDENTIALS = "YWRtaW46YWRtaW4=";
     public static final long GENRE_ID_1 = 1L;
     public static final long GENRE_ID_2 = 2L;
     public static final String GENRE_1 = "Фантастика";
     public static final String GENRE_2 = "Фентези";
 
+    @WithUserDetails("user")
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() throws Exception {
@@ -43,7 +43,6 @@ public class GenreControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/genre/1")
                 .contentType("application/json")
-                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -53,6 +52,7 @@ public class GenreControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
+    @WithUserDetails("user")
     @DisplayName("is checking getAll method.")
     @Test
     void checkingGetAll() throws Exception {
@@ -64,7 +64,6 @@ public class GenreControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/genre")
                 .contentType("application/json")
-                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -74,6 +73,7 @@ public class GenreControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
+    @WithUserDetails("admin")
     @DisplayName("is checking saveGenre method.")
     @Test
     void checkingSave() throws Exception {
@@ -83,7 +83,6 @@ public class GenreControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/genre")
                 .contentType("application/json")
-                .header("Authorization", "Basic " + ADMIN_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -91,5 +90,35 @@ public class GenreControllerTest {
         String actualResponse = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
+    }
+
+    @WithUserDetails("user")
+    @DisplayName("is checking saveGenre method with invalid authorities.")
+    @Test
+    void checkingSaveWithInvalidAuthorities() throws Exception {
+        Genre genre = new Genre(GENRE_ID_1, GENRE_1);
+
+        String expectedResponse = objectMapper.writeValueAsString(genre);
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/genre")
+                .contentType("application/json")
+                .content(expectedResponse))
+                .andExpect(status().isForbidden())
+                .andReturn();
+    }
+
+    @WithUserDetails("user")
+    @DisplayName("is checking delete method with invalid authorities.")
+    @Test
+    void checkingDeleteWithInvalidAuthorities() throws Exception {
+        Genre genre = new Genre(GENRE_ID_1, GENRE_1);
+
+        String expectedResponse = objectMapper.writeValueAsString(genre);
+
+        MvcResult mvcResult = mockMvc.perform(delete("/api/v1/genre/1")
+                .contentType("application/json")
+                .content(expectedResponse))
+                .andExpect(status().isForbidden())
+                .andReturn();
     }
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -32,7 +33,6 @@ public class BookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public static final String USER_CREDENTIALS = "dXNlcjp1c2Vy";
     public static final long AUTHOR_ID_1 = 1L;
     public static final long AUTHOR_ID_2 = 2L;
     public static final String AUTHOR_1 = "Гаррисон, Г.";
@@ -48,6 +48,7 @@ public class BookControllerTest {
     public static final String BOOK_2 = "Стальная крыса спасает мир";
     public static final String BOOK_3 = "Не время для драконов";
 
+    @WithUserDetails("user")
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() throws Exception {
@@ -59,7 +60,6 @@ public class BookControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/book/1")
                 .contentType("application/json")
-                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -69,6 +69,7 @@ public class BookControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
+    @WithUserDetails("user")
     @DisplayName("is checking getAll method.")
     @Test
     @DirtiesContext(methodMode = BEFORE_METHOD)
@@ -86,7 +87,6 @@ public class BookControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/book")
                 .contentType("application/json")
-                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -96,6 +96,7 @@ public class BookControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
+    @WithUserDetails("user")
     @DisplayName("is checking saveBook method.")
     @Test
     void checkingSave() throws Exception {
@@ -107,7 +108,6 @@ public class BookControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/book")
                 .contentType("application/json")
-                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -117,6 +117,7 @@ public class BookControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
+    @WithUserDetails("user")
     @DisplayName("is checking updateBook method.")
     @DirtiesContext(methodMode = BEFORE_METHOD)
     @Test
@@ -129,7 +130,6 @@ public class BookControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(put("/api/v1/book/1")
                 .contentType("application/json")
-                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -139,12 +139,12 @@ public class BookControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
+    @WithUserDetails("user")
     @DisplayName("is checking deleteBook method.")
     @Test
     void checkingDelete() throws Exception {
         MvcResult mvcResult = mockMvc.perform(delete("/api/v1/book/1")
-                .contentType("application/json")
-                .header("Authorization", "Basic " + USER_CREDENTIALS))
+                .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn();
 

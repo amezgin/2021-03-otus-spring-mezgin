@@ -1,7 +1,6 @@
 package ru.otus.amezgin.library.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,14 +14,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.annotation.PostConstruct;
-
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final UserDetailsService userDetailsService;
 
@@ -31,15 +26,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @PostConstruct
-    public void init() {
-        try {
-            authenticationManagerBuilder
-                    .userDetailsService(userDetailsService)
-                    .passwordEncoder(passwordEncoder());
-        } catch (Exception e) {
-            throw new BeanInitializationException("Security configuration failed", e);
-        }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -53,19 +42,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf()
                 .disable()
-                .httpBasic()
-                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/book/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/v1/author/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/api/v1/author/**").hasAnyRole(AuthoritiesConstants.ADMIN)
-                .antMatchers(HttpMethod.POST, "/api/v1/author").hasAnyRole(AuthoritiesConstants.ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/api/v1/author/**").hasAnyRole(RoleConstants.ADMIN)
+                .antMatchers(HttpMethod.POST, "/api/v1/author").hasAnyRole(RoleConstants.ADMIN)
                 .antMatchers(HttpMethod.GET, "/api/v1/genre/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/api/v1/genre/**").hasAnyRole(AuthoritiesConstants.ADMIN)
-                .antMatchers(HttpMethod.POST, "/api/v1/genre").hasAnyRole(AuthoritiesConstants.ADMIN)
+                .antMatchers(HttpMethod.DELETE, "/api/v1/genre/**").hasAnyRole(RoleConstants.ADMIN)
+                .antMatchers(HttpMethod.POST, "/api/v1/genre").hasAnyRole(RoleConstants.ADMIN)
                 .antMatchers("/api/v1/comment/**").authenticated()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/**").denyAll()
                 .and()
                 .formLogin();

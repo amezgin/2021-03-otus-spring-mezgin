@@ -3,7 +3,7 @@ package ru.otus.amezgin.library.config;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public final class AuthoritiesConstants {
+public final class RoleConstants {
 
     public static final String ADMIN = "ADMIN";
 

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -35,7 +36,6 @@ public class CommentControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public static final String USER_CREDENTIALS = "dXNlcjp1c2Vy";
     public static final long AUTHOR_ID_1 = 1L;
     public static final String AUTHOR_1 = "Гаррисон, Г.";
     public static final long GENRE_ID_1 = 1L;
@@ -47,6 +47,7 @@ public class CommentControllerTest {
     public static final String COMMENT_2 = "Прочитал в один заход!";
     public static final String AUTHOR = "ADMIN";
 
+    @WithUserDetails("user")
     @DisplayName("is checking getById method.")
     @DirtiesContext(methodMode = BEFORE_METHOD)
     @Test
@@ -60,7 +61,6 @@ public class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/comment/1")
                 .contentType("application/json")
-                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -70,6 +70,7 @@ public class CommentControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
+    @WithUserDetails("user")
     @DisplayName("is checking getAll method.")
     @DirtiesContext(methodMode = BEFORE_METHOD)
     @Test
@@ -84,7 +85,6 @@ public class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/comment/book/1")
                 .contentType("application/json")
-                .header("Authorization", "Basic " + USER_CREDENTIALS)
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
