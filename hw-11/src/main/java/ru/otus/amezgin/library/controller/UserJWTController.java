@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.amezgin.library.config.jwt.TokenProvider;
+import ru.otus.amezgin.library.controller.vm.JWTToken;
 import ru.otus.amezgin.library.controller.vm.LoginVM;
 
 import static ru.otus.amezgin.library.config.jwt.JWTFilter.AUTHORIZATION_HEADER;
@@ -37,23 +38,5 @@ public class UserJWTController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
-    }
-
-    static class JWTToken {
-
-        private String idToken;
-
-        JWTToken(String idToken) {
-            this.idToken = idToken;
-        }
-
-        @JsonProperty("id_token")
-        String getIdToken() {
-            return idToken;
-        }
-
-        void setIdToken(String idToken) {
-            this.idToken = idToken;
-        }
     }
 }

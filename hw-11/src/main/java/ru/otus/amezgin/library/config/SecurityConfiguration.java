@@ -1,7 +1,6 @@
 package ru.otus.amezgin.library.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,14 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.otus.amezgin.library.config.jwt.JWTFilter;
 
-import javax.annotation.PostConstruct;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final UserDetailsService userDetailsService;
 
@@ -42,15 +38,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @PostConstruct
-    public void init() {
-        try {
-            authenticationManagerBuilder
-                    .userDetailsService(userDetailsService)
-                    .passwordEncoder(passwordEncoder());
-        } catch (Exception e) {
-            throw new BeanInitializationException("Security configuration failed", e);
-        }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override

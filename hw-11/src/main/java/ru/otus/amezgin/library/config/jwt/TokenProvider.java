@@ -23,11 +23,15 @@ public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
 
-    @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.sessionTime}")
+
     private long sessionTime;
+
+    public TokenProvider(@Value("${jwt.secret}") String secretKey, @Value("${jwt.sessionTime}") long sessionTime) {
+        this.secretKey = secretKey;
+        this.sessionTime = sessionTime;
+    }
 
     public String createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()

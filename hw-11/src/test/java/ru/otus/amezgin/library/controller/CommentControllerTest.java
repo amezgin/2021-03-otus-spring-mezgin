@@ -1,7 +1,6 @@
 package ru.otus.amezgin.library.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.otus.amezgin.library.controller.BookControllerTest.BOOK_1;
 
@@ -68,7 +66,7 @@ public class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/comment/1")
                 .contentType("application/json")
-                .header("Authorization", getToken(USER, USER_PASS))
+                .header("Authorization", TokenUtils.getToken(tokenMap, mockMvc, USER, USER_PASS))
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -93,7 +91,7 @@ public class CommentControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/comment/book/1")
                 .contentType("application/json")
-                .header("Authorization", getToken(USER, USER_PASS))
+                .header("Authorization", TokenUtils.getToken(tokenMap, mockMvc, USER, USER_PASS))
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -101,20 +99,5 @@ public class CommentControllerTest {
         String actualResponse = mvcResult.getResponse().getContentAsString();
 
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
-    }
-
-    @SneakyThrows
-    private String getToken(String userName, String userPass) {
-        if (!tokenMap.containsKey(userName)) {
-            MvcResult result = mockMvc.perform(post("/api/v1/authenticate")
-                    .contentType("application/json")
-                    .content("{\"login\":\"" + userName +
-                            "\", \"password\":\"" + userPass +
-                            "\"}"))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            tokenMap.put(userName, result.getResponse().getHeaderValue("Authorization").toString());
-        }
-        return tokenMap.get(userName);
     }
 }

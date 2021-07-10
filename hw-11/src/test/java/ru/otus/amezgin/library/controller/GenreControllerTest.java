@@ -1,7 +1,6 @@
 package ru.otus.amezgin.library.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +43,6 @@ public class GenreControllerTest {
     public static final String GENRE_2 = "Фентези";
     public static final String GENRE_3 = "Роман";
 
-    @WithUserDetails("user")
     @DisplayName("is checking getById method.")
     @Test
     void checkingGetById() throws Exception {
@@ -54,7 +52,7 @@ public class GenreControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/genre/1")
                 .contentType("application/json")
-                .header("Authorization", getToken(USER, USER_PASS))
+                .header("Authorization", TokenUtils.getToken(tokenMap, mockMvc, USER, USER_PASS))
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -64,7 +62,6 @@ public class GenreControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
-    @WithUserDetails("user")
     @DisplayName("is checking getAll method.")
     @Test
     void checkingGetAll() throws Exception {
@@ -77,7 +74,7 @@ public class GenreControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/genre")
                 .contentType("application/json")
-                .header("Authorization", getToken(USER, USER_PASS))
+                .header("Authorization", TokenUtils.getToken(tokenMap, mockMvc, USER, USER_PASS))
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -87,7 +84,6 @@ public class GenreControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
-    @WithUserDetails("admin")
     @DisplayName("is checking saveGenre method.")
     @Test
     void checkingSave() throws Exception {
@@ -97,7 +93,7 @@ public class GenreControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/genre")
                 .contentType("application/json")
-                .header("Authorization", getToken(ADMIN, ADMIN_PASS))
+                .header("Authorization", TokenUtils.getToken(tokenMap, mockMvc, ADMIN, ADMIN_PASS))
                 .content(expectedResponse))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -107,7 +103,6 @@ public class GenreControllerTest {
         assertThat(actualResponse).isEqualToIgnoringWhitespace(expectedResponse);
     }
 
-    @WithUserDetails("user")
     @DisplayName("is checking saveGenre method with invalid authorities.")
     @Test
     void checkingSaveWithInvalidAuthorities() throws Exception {
@@ -117,13 +112,12 @@ public class GenreControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/genre")
                 .contentType("application/json")
-                .header("Authorization", getToken(USER, USER_PASS))
+                .header("Authorization", TokenUtils.getToken(tokenMap, mockMvc, USER, USER_PASS))
                 .content(expectedResponse))
                 .andExpect(status().isForbidden())
                 .andReturn();
     }
 
-    @WithUserDetails("user")
     @DisplayName("is checking delete method with invalid authorities.")
     @Test
     void checkingDeleteWithInvalidAuthorities() throws Exception {
@@ -133,24 +127,9 @@ public class GenreControllerTest {
 
         MvcResult mvcResult = mockMvc.perform(delete("/api/v1/genre/1")
                 .contentType("application/json")
-                .header("Authorization", getToken(USER, USER_PASS))
+                .header("Authorization", TokenUtils.getToken(tokenMap, mockMvc, USER, USER_PASS))
                 .content(expectedResponse))
                 .andExpect(status().isForbidden())
                 .andReturn();
-    }
-
-    @SneakyThrows
-    private String getToken(String userName, String userPass) {
-        if (!tokenMap.containsKey(userName)) {
-            MvcResult result = mockMvc.perform(post("/api/v1/authenticate")
-                    .contentType("application/json")
-                    .content("{\"login\":\"" + userName +
-                            "\", \"password\":\"" + userPass +
-                            "\"}"))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            tokenMap.put(userName, result.getResponse().getHeaderValue("Authorization").toString());
-        }
-        return tokenMap.get(userName);
     }
 }
