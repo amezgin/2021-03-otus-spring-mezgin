@@ -11,6 +11,8 @@ import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.scheduling.PollerMetadata;
 import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.SubscribableChannel;
+import ru.otus.amezgin.service.CentralService;
+import ru.otus.amezgin.service.CentralServiceImpl;
 
 @Configuration
 public class ChannelConfig {
@@ -44,12 +46,12 @@ public class ChannelConfig {
 
     @Bean
     public IntegrationFlow cafeFlow() {
-        return IntegrationFlows.from("itemsChannel")
+        return IntegrationFlows.from(itemsChannel())
                 .split()
-                .channel("centralChannel")
+                .channel(centralChannel())
                 .handle("centralServiceImpl", "sendPurpose")
                 .aggregate()
-                .channel("reportChannel")
+                .channel(reportChannel())
                 .get();
     }
 }
