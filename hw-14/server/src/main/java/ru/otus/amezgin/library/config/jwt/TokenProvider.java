@@ -23,10 +23,9 @@ public class TokenProvider {
 
     private static final String AUTHORITIES_KEY = "auth";
 
-    private String secretKey;
+    private final String secretKey;
 
-
-    private long sessionTime;
+    private final long sessionTime;
 
     public TokenProvider(@Value("${jwt.secret}") String secretKey, @Value("${jwt.sessionTime}") long sessionTime) {
         this.secretKey = secretKey;
