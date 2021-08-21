@@ -1,5 +1,5 @@
 library:
-  url: http://localhost:8888/api/v1/
+  url: http://server:8888/api/v1/
   userName: user
   userPass: user
   sessionTime: 1200000000

@@ -6,6 +6,7 @@ networks:
 services:
 
   server:
+    hostname: server
     build:
       context: ./server
     restart: always
@@ -15,6 +16,7 @@ services:
       - lan_docker
 
   client:
+    hostname: client
     build:
       context: ./client
     restart: always
@@ -22,3 +24,8 @@ services:
       - 8081:8081
     networks:
       - lan_docker
+    depends_on:
+      - server
+    environment:
+      - SERVER_HOST=server
+      - SERVER_PORT=8888
