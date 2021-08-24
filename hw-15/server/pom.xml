@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ru.otus.amezgin</groupId>
-	<artifactId>hw-14-server</artifactId>
+	<artifactId>hw-15-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>hw-14-server</name>
+	<name>hw-15-server</name>
 	<description>Demo project for Spring Boot MVC</description>
 	<properties>
 		<java.version>11</java.version>
