@@ -1,0 +1,17 @@
+library:
+  url: http://server:8888/api/v1/
+  userName: user
+  userPass: user
+  sessionTime: 1200000000
+
+spring:
+
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER:kafka:29092}
+    consumer:
+      group-id: "library-info"
+
+
+library-client:
+  kafka-topic-name: ${KAFKA_TOPIC:library-info}
+
